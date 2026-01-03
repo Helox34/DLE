@@ -1,6 +1,4 @@
-/* --- BAZA DANYCH LOGOTYPÓW --- */
-// Klucz = unikalne ID
-// Wartość = { name: [Główna, aliasy], domain: 'domena do favicona' }
+/* --- BAZA DANYCH LOGOTYPÓW (Z DOMENAMI DO GOOGLE API) --- */
 const allLogos = {
     // TIER 1: Giganci (Łatwe)
     "mcdonalds": { name: ["McDonald's", "Mac", "Mak"], domain: "mcdonalds.com" },
@@ -75,7 +73,7 @@ const gameData = {
     expert: getSubset([...tier3Codes, ...tier4Codes])
 };
 
-/* --- UI --- */
+/* --- UI (OBSŁUGA INTERFEJSU) --- */
 const ui = {
     elements: {
         screens: { menu: document.getElementById('menu'), game: document.getElementById('game') },
@@ -121,9 +119,9 @@ const ui = {
         this.elements.screens.menu.classList.remove('hidden');
     },
 
-    updateBlur(pct, isExpert) {
-        const px = (pct / 2); 
+    updateBlur(px, isExpert) {
         let filter = `blur(${px}px)`;
+        // W trybie Expert dodajemy czarno-biały filtr i powiększenie (fragment loga)
         if (isExpert) filter += ' grayscale(100%) scale(1.5)';
         this.elements.flag.style.filter = filter;
     },
@@ -162,10 +160,11 @@ const ui = {
 
 /* --- LOGIKA GRY --- */
 const game = {
-    config: { maxTries: 6, maxRounds: 8 },
+    // StartBlur: 15px - to nasza wartość początkowa
+    config: { maxTries: 6, maxRounds: 8, startBlur: 15 },
     state: { 
         mode: null, round: 1, tries: 0, streak: 0, score: 0, 
-        currentCode: null, blurPct: 80, itemsList: [], recordBroken: false 
+        currentCode: null, currentBlur: 0, itemsList: [], recordBroken: false 
     },
     itemNames: [],
 
@@ -208,7 +207,9 @@ const game = {
 
         this.state.currentCode = this.state.itemsList[this.state.round - 1];
         this.state.tries = 0;
-        this.state.blurPct = 80;
+        
+        // Ustawiamy początkowy blur na 15px (z konfigu)
+        this.state.currentBlur = this.config.startBlur;
 
         ui.elements.input.value = '';
         ui.elements.input.disabled = false;
@@ -224,9 +225,11 @@ const game = {
         ui.elements.progressBar.style.width = `${progressPct}%`;
 
         ui.elements.flag.style.opacity = '0';
-        ui.updateBlur(this.state.blurPct, this.state.mode === 'expert');
+        
+        // Aplikujemy blur
+        ui.updateBlur(this.state.currentBlur, this.state.mode === 'expert');
 
-        // UŻYWAMY GOOGLE API
+        // Pobieramy logo z Google API
         const domain = allLogos[this.state.currentCode].domain;
         const newSrc = `https://www.google.com/s2/favicons?domain=${domain}&sz=256`;
         ui.elements.flag.src = newSrc;
@@ -248,7 +251,7 @@ const game = {
         ui.setDots(this.config.maxTries, this.state.tries);
 
         if (correctNames.includes(userGuess)) {
-            // SUKCES
+            // --- SUKCES ---
             const basePoints = (this.config.maxTries - this.state.tries) + 1;
             const totalPoints = basePoints + this.state.streak;
 
@@ -258,6 +261,7 @@ const game = {
             ui.elements.score.textContent = this.state.score;
             ui.elements.streak.textContent = this.state.streak;
             
+            // Obsługa rekordu
             const recordKey = `logo_bestScore_${this.state.mode}`;
             const currentBest = parseInt(localStorage.getItem(recordKey) || 0);
 
@@ -272,7 +276,7 @@ const game = {
             ui.elements.msg.textContent = `Brawo! To ${currentSource[this.state.currentCode][0]}`;
             ui.elements.msg.style.color = "var(--success)";
             
-            // Pokaż bez blura i bez grayscale
+            // Wyłączamy filtry (pokazujemy czyste logo)
             ui.elements.flag.style.filter = "none";
             ui.animatePoints(totalPoints);
             
@@ -281,8 +285,9 @@ const game = {
 
             this.nextRoundDelay();
         } else {
-            // BŁĄD
+            // --- BŁĄD ---
             if (this.state.tries >= this.config.maxTries) {
+                // Koniec gry w rundzie
                 ui.elements.msg.textContent = `Porażka! To: ${currentSource[this.state.currentCode][0]}`;
                 ui.elements.msg.style.color = "var(--danger)";
                 ui.elements.flag.style.filter = "none";
@@ -290,11 +295,18 @@ const game = {
                 ui.elements.streak.textContent = 0;
                 this.nextRoundDelay();
             } else {
+                // Kolejna szansa
                 ui.elements.msg.textContent = "Źle! Obrazek się wyostrza...";
                 ui.elements.msg.style.color = "var(--warning)";
                 ui.shakeInput();
-                this.state.blurPct = Math.max(0, this.state.blurPct - 10);
-                ui.updateBlur(this.state.blurPct, this.state.mode === 'expert');
+                
+                // --- PROPORCJONALNE ZMNIEJSZANIE BLURA ---
+                // Obliczamy krok: startBlur / (liczba prób - 1)
+                // Dzięki temu przy ostatniej próbie zejdziemy idealnie do 0.
+                const step = this.config.startBlur / (this.config.maxTries - 1);
+                this.state.currentBlur = Math.max(0, this.state.currentBlur - step);
+                
+                ui.updateBlur(this.state.currentBlur, this.state.mode === 'expert');
             }
         }
     },
@@ -332,6 +344,7 @@ ui.init();
 ui.elements.checkBtn.addEventListener('click', () => game.checkGuess());
 ui.elements.input.addEventListener('keypress', (e) => { if (e.key === 'Enter') game.checkGuess(); });
 
+// Obsługa podpowiedzi
 ui.elements.input.addEventListener('input', (e) => {
     const val = e.target.value.toLowerCase();
     ui.elements.suggestList.innerHTML = '';
