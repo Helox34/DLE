@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popdle - Higher or Lower</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="bg-animation"></div>
+
+    <div class="card glass-panel fade-in">
+        
+        <header class="header-area">
+            <h1>POPDLE <span class="accent">VS</span></h1>
+            <p class="subtitle">Kto ma większą populację?</p>
+        </header>
+
+        <div class="game-board">
+            
+            <div class="country-box left-box" id="panel-left">
+                <img id="flag-left" class="flag-img" src="" alt="Flaga">
+                <h2 id="name-left" class="country-name">Polska</h2>
+                
+                <div class="stat-container">
+                    <span class="stat-label">Populacja</span>
+                    <span id="pop-left" class="stat-value">38 000 000</span>
+                </div>
+            </div>
+
+            <div class="vs-circle">VS</div>
+
+            <div class="country-box right-box" id="panel-right">
+                <img id="flag-right" class="flag-img" src="" alt="Flaga">
+                <h2 id="name-right" class="country-name">Niemcy</h2>
+                
+                <div class="stat-container interaction-zone">
+                    
+                    <div id="buttons-area" class="buttons-block">
+                        <p class="question">ma populację...</p>
+                        <div class="btns-row">
+                            <button class="btn-guess btn-higher" onclick="game.guess('higher')">
+                                <i class="fa-solid fa-arrow-up"></i> WYŻSZĄ
+                            </button>
+                            <button class="btn-guess btn-lower" onclick="game.guess('lower')">
+                                <i class="fa-solid fa-arrow-down"></i> NIŻSZĄ
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="result-area" class="result-block hidden">
+                        <span class="stat-label">Populacja</span>
+                        <span id="pop-right" class="stat-value">???</span>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer-stats">
+            <div class="stat-pill">
+                Passa: <span id="current-score" class="highlight">0</span>
+            </div>
+            <div class="stat-pill">
+                Rekord: <span id="best-score" class="gold-text">0</span>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="game-over" class="modal hidden">
+        <div class="modal-content glass-panel">
+            <h1 class="loss-title">KONIEC GRY!</h1>
+            <p class="loss-reason" id="loss-msg">Pomyliłeś się.</p>
+            <div class="final-score">Wynik: <span id="final-score-val">0</span></div>
+            <button class="btn-restart" onclick="game.restart()">ZAGRAJ PONOWNIE</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

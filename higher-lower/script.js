@@ -1,3 +1,4 @@
+/* --- BAZA DANYCH --- */
 const countriesDB = [
     { code: "CN", name: "Chiny", pop: 1411000000 },
     { code: "IN", name: "Indie", pop: 1428000000 },
@@ -60,6 +61,7 @@ const countriesDB = [
     { code: "MC", name: "Monako", pop: 36000 }
 ];
 
+/* --- LOGIKA GRY --- */
 const game = {
     state: {
         currentLeft: null,
@@ -78,7 +80,8 @@ const game = {
             flag: document.getElementById('flag-right'),
             name: document.getElementById('name-right'),
             pop: document.getElementById('pop-right'),
-            buttons: document.getElementById('buttons-area')
+            buttonsBlock: document.getElementById('buttons-area'),
+            resultBlock: document.getElementById('result-area')
         },
         score: document.getElementById('current-score'),
         bestScore: document.getElementById('best-score'),
@@ -107,19 +110,22 @@ const game = {
     },
 
     render() {
+        // Renderuj lewą stronę
         const left = this.state.currentLeft;
         this.ui.left.flag.src = `https://flagsapi.com/${left.code}/flat/64.png`;
         this.ui.left.name.textContent = left.name;
         this.ui.left.pop.textContent = this.formatNumber(left.pop);
 
+        // Renderuj prawą stronę (reset)
         const right = this.state.currentRight;
         this.ui.right.flag.src = `https://flagsapi.com/${right.code}/flat/64.png`;
-        this.ui.right.name.textContent = right.name;
+        this.ui.right.name.textContent = right.name; // Nazwa widoczna!
         
+        // Pokaż przyciski, ukryj wynik
+        this.ui.right.buttonsBlock.classList.remove('hidden');
+        this.ui.right.resultBlock.classList.add('hidden');
         this.ui.right.pop.textContent = "???";
-        this.ui.right.pop.classList.add('hidden-value');
-        this.ui.right.buttons.style.display = "flex";
-        this.ui.right.buttons.style.opacity = "1";
+        this.ui.right.pop.style.color = "#FFD700"; // Reset koloru
     },
 
     guess(direction) {
@@ -137,18 +143,18 @@ const game = {
     },
 
     revealResult(isCorrect, actualValue) {
-        this.ui.right.buttons.style.opacity = "0";
-        setTimeout(() => this.ui.right.buttons.style.display = "none", 300);
+        // Przełącz widoczność: Ukryj przyciski, pokaż wynik
+        this.ui.right.buttonsBlock.classList.add('hidden');
+        this.ui.right.resultBlock.classList.remove('hidden');
 
+        // Animacja licznika
         const el = this.ui.right.pop;
-        el.classList.remove('hidden-value');
-        
         this.animateValue(el, 0, actualValue, 1000, () => {
             if (isCorrect) {
-                el.style.color = "#10b981"; 
-                setTimeout(() => this.nextRound(), 1000);
+                el.style.color = "#10b981"; // Zielony
+                setTimeout(() => this.nextRound(), 1200);
             } else {
-                el.style.color = "#ef4444"; 
+                el.style.color = "#ef4444"; // Czerwony
                 setTimeout(() => this.gameOver(), 1500);
             }
         });
@@ -157,8 +163,8 @@ const game = {
     nextRound() {
         this.state.score++;
         this.ui.score.textContent = this.state.score;
-        this.ui.right.pop.style.color = "#FFD700"; // Reset na złoty
 
+        // Przejście
         this.state.currentLeft = this.state.currentRight;
         this.state.currentRight = this.getRandomCountry(this.state.currentLeft);
 
@@ -174,7 +180,7 @@ const game = {
             localStorage.setItem('popdle_highscore', score);
             this.ui.lossMsg.textContent = `Nowy rekord! ${score} pkt`;
         } else {
-            this.ui.lossMsg.textContent = `Poprawna populacja: ${this.formatNumber(this.state.currentRight.pop)}`;
+            this.ui.lossMsg.textContent = `Poprawna populacja to ${this.formatNumber(this.state.currentRight.pop)}`;
         }
         
         this.ui.finalScore.textContent = score;
@@ -186,7 +192,6 @@ const game = {
         this.ui.score.textContent = "0";
         this.ui.bestScore.textContent = localStorage.getItem('popdle_highscore') || 0;
         
-        this.ui.right.pop.style.color = "#FFD700";
         this.ui.gameOverModal.classList.add('hidden');
         
         this.state.currentLeft = this.getRandomCountry();
