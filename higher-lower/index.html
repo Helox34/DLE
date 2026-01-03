@@ -3,128 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logodle - Zgadnij Markę</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Popdle - Higher or Lower</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
     <div class="bg-animation"></div>
 
-    <div id="menu" class="card glass-panel fade-in">
-        <div class="logo-area">
-            <h1>LOGODLE <span class="accent">QUIZ</span></h1>
-            <p class="subtitle">Rozpoznasz markę po fragmencie?</p>
-        </div>
-
-        <p class="section-title">Wybierz poziom:</p>
-
-        <div class="levels-container">
-            <div class="level-row">
-                <button class="btn-level btn-easy" onclick="game.start('easy')">
-                    <span class="btn-title">ŁATWY</span>
-                    <span class="btn-desc">Giganci rynku</span>
-                </button>
-                <div class="level-score">
-                    <span class="score-label">REKORD</span>
-                    <span class="score-value gold-glow" id="record-easy">0</span>
-                </div>
-            </div>
-
-            <div class="level-row">
-                <button class="btn-level btn-hard" onclick="game.start('hard')">
-                    <span class="btn-title">ŚREDNI</span>
-                    <span class="btn-desc">Popularne apki</span>
-                </button>
-                <div class="level-score">
-                    <span class="score-label">REKORD</span>
-                    <span class="score-value gold-glow" id="record-hard">0</span>
-                </div>
-            </div>
-
-            <div class="level-row">
-                <button class="btn-level btn-pro" onclick="game.start('pro')">
-                    <span class="btn-title">TRUDNY</span>
-                    <span class="btn-desc">Mniej znane</span>
-                </button>
-                <div class="level-score">
-                    <span class="score-label">REKORD</span>
-                    <span class="score-value gold-glow" id="record-pro">0</span>
-                </div>
-            </div>
-
-            <div class="level-row">
-                <button class="btn-level btn-expert" onclick="game.start('expert')">
-                    <span class="btn-title">EKSPERT</span>
-                    <span class="btn-desc">Czarno-białe</span>
-                </button>
-                <div class="level-score">
-                    <span class="score-label">REKORD</span>
-                    <span class="score-value gold-glow" id="record-expert">0</span>
-                </div>
-            </div>
-        </div>
+    <div class="card glass-panel fade-in">
         
-        <div class="footer-links">
-            <button class="btn-text" onclick="ui.toggleInstructions()">Zasady gry</button>
-        </div>
-        
-        <div id="instructions" class="hidden glass-inner">
-            <ul>
-                <li><strong>Cel:</strong> Zgadnij markę na podstawie rozmazanego logo.</li>
-                <li><strong>Mechanika:</strong> Z każdym błędem obrazek staje się wyraźniejszy.</li>
-                <li><strong>Tryb Ekspert:</strong> Loga są czarno-białe i bardzo zamazane!</li>
-                <li><strong>Punktacja:</strong> Im szybciej zgadniesz, tym więcej punktów.</li>
-            </ul>
-        </div>
-    </div>
-
-    <div id="game" class="card glass-panel hidden">
-        
-        <div id="recordAnim" class="record-popup hidden">
-            🏆 NOWY REKORD! 🏆
-        </div>
-
-        <header class="game-hud">
-            <div class="hud-item">
-                <span class="hud-label">Runda</span>
-                <span class="hud-value"><span id="round">1</span>/8</span>
-            </div>
-            <div class="hud-item score-container">
-                <span class="hud-label">Wynik</span>
-                <span class="hud-value highlight" id="score">0</span>
-            </div>
-            <div class="hud-item streak-container">
-                <span class="hud-label">Passa</span>
-                <span class="hud-value fire-text" id="currentStreak">0</span>
-            </div>
+        <header class="header-area">
+            <h1>POPDLE <span class="accent">VS</span></h1>
+            <p class="subtitle">Kto ma większą populację?</p>
         </header>
 
-        <div class="progress-track">
-            <div class="progress-fill" id="progressBar"></div>
+        <div class="game-board">
+            
+            <div class="country-box left-box" id="panel-left">
+                <img id="flag-left" class="flag-img" src="" alt="Flaga">
+                <h2 id="name-left" class="country-name">Polska</h2>
+                
+                <div class="stat-container">
+                    <span class="stat-label">Populacja</span>
+                    <span id="pop-left" class="stat-value">38 000 000</span>
+                </div>
+            </div>
+
+            <div class="vs-circle">VS</div>
+
+            <div class="country-box right-box" id="panel-right">
+                <img id="flag-right" class="flag-img" src="" alt="Flaga">
+                <h2 id="name-right" class="country-name">Niemcy</h2>
+                
+                <div class="stat-container interaction-zone">
+                    
+                    <div id="buttons-area" class="buttons-block">
+                        <p class="question">ma populację...</p>
+                        <div class="btns-row">
+                            <button class="btn-guess btn-higher" onclick="game.guess('higher')">
+                                <i class="fa-solid fa-arrow-up"></i> WYŻSZĄ
+                            </button>
+                            <button class="btn-guess btn-lower" onclick="game.guess('lower')">
+                                <i class="fa-solid fa-arrow-down"></i> NIŻSZĄ
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="result-area" class="result-block hidden">
+                        <span class="stat-label">Populacja</span>
+                        <span id="pop-right" class="stat-value">???</span>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
 
-        <div class="flag-wrapper logo-wrapper">
-            <div class="points-popup" id="pointsPopup"></div>
-            <div class="img-bg">
-                <img id="flag" class="flag-img logo-img" src="" alt="Logo" draggable="false">
+        <div class="footer-stats">
+            <div class="stat-pill">
+                Passa: <span id="current-score" class="highlight">0</span>
+            </div>
+            <div class="stat-pill">
+                Rekord: <span id="best-score" class="gold-text">0</span>
             </div>
         </div>
 
-        <div class="interaction-area">
-            <div class="input-group">
-                <input id="guess" type="text" placeholder="Wpisz nazwę firmy..." autocomplete="off">
-                <ul id="suggestList" class="suggestions hidden"></ul>
-            </div>
-            <button id="checkBtn" class="btn-action">SPRAWDŹ</button>
-        </div>
+    </div>
 
-        <div class="feedback-box">
-            <p id="message" class="msg-text">Powodzenia!</p>
-            <div class="attempts-dots" id="attemptsDots"></div>
+    <div id="game-over" class="modal hidden">
+        <div class="modal-content glass-panel">
+            <h1 class="loss-title">KONIEC GRY!</h1>
+            <p class="loss-reason" id="loss-msg">Pomyliłeś się.</p>
+            <div class="final-score">Wynik: <span id="final-score-val">0</span></div>
+            <button class="btn-restart" onclick="game.restart()">ZAGRAJ PONOWNIE</button>
         </div>
-
-        <button id="backMenu" class="btn-secondary hidden" onclick="game.backToMenu()">WRÓĆ DO MENU</button>
     </div>
 
     <script src="script.js"></script>
