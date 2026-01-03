@@ -1,0 +1,198 @@
+:root {
+    --bg-dark: #0f1219;
+    --glass-bg: rgba(20, 25, 40, 0.9);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --primary: #3b82f6;
+    --accent: #8b5cf6;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --gold: #FFD700;
+    --text-main: #ffffff;
+    --text-muted: #94a3b8;
+    --font: 'Montserrat', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: var(--font);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+/* Animowane tło (jak w Flagdle) */
+.bg-animation {
+    position: absolute; width: 200%; height: 200%;
+    background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15), transparent 60%);
+    animation: rotateBg 20s linear infinite;
+    z-index: -1;
+}
+@keyframes rotateBg { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* GŁÓWNA KARTA (OKNO) */
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    padding: 2.5rem;
+    width: 95%; 
+    max-width: 800px; /* Szeroka karta, żeby zmieścić 2 kraje */
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+    text-align: center;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+/* NAGŁÓWEK */
+.header-area { margin-bottom: 2rem; }
+h1 { font-weight: 800; letter-spacing: -1px; margin-bottom: 5px; font-size: 2.5rem; }
+.accent { color: var(--primary); background: linear-gradient(to right, var(--primary), var(--accent)); -webkit-background-clip: text; color: transparent; }
+.subtitle { color: var(--text-muted); font-size: 0.9rem; letter-spacing: 0.5px; }
+
+/* OBSZAR GRY (GRID) */
+.game-board {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    position: relative;
+    background: rgba(0,0,0,0.2);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(255,255,255,0.05);
+    min-height: 320px;
+}
+
+/* POJEDYNCZY KRAJ (BOX) */
+.country-box {
+    flex: 1;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    padding: 10px;
+    position: relative;
+    transition: opacity 0.3s;
+}
+
+.flag-img {
+    width: 80px; height: auto;
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
+    margin-bottom: 15px;
+    transition: transform 0.3s;
+}
+.flag-img:hover { transform: scale(1.1); }
+
+.country-name {
+    font-size: 1.4rem; font-weight: 800; margin-bottom: 10px;
+    min-height: 60px; /* Rezerwa miejsca na długie nazwy */
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1.2;
+}
+
+.stat-container {
+    background: rgba(255,255,255,0.05);
+    padding: 15px; width: 100%; border-radius: 12px;
+    margin-top: auto; /* Dopycha do dołu */
+}
+
+.stat-label { display: block; font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 5px; }
+.stat-value { font-size: 1.8rem; font-weight: 900; color: var(--gold); text-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
+.hidden-value { opacity: 0; }
+
+/* VS NA ŚRODKU */
+.vs-circle {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px; height: 50px;
+    background: var(--text-main);
+    color: var(--bg-dark);
+    font-weight: 900;
+    border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    z-index: 10;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    font-size: 1rem;
+}
+
+/* PRZYCISKI DECYZJI (NAKŁADKA NA PRAWY PANEL) */
+.buttons-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(15, 18, 25, 0.85); /* Przyciemnienie prawego panelu */
+    backdrop-filter: blur(4px);
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    border-radius: 16px;
+    z-index: 5;
+    transition: opacity 0.3s;
+}
+
+.question { margin-bottom: 15px; font-size: 0.9rem; color: #ccc; }
+
+.btns-row { display: flex; flex-direction: column; gap: 10px; width: 80%; }
+
+.btn-guess {
+    border: none; padding: 12px; border-radius: 12px;
+    font-weight: 700; cursor: pointer; color: white;
+    font-size: 0.9rem;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    transition: transform 0.1s, filter 0.2s;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.btn-guess:active { transform: scale(0.96); }
+
+.btn-higher { background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.6)); border-color: var(--success); }
+.btn-higher:hover { filter: brightness(1.2); }
+
+.btn-lower { background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.6)); border-color: var(--danger); }
+.btn-lower:hover { filter: brightness(1.2); }
+
+/* STOPKA Z WYNIKAMI */
+.footer-stats {
+    display: flex; justify-content: center; gap: 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 20px;
+}
+.stat-pill { font-size: 1rem; color: var(--text-muted); font-weight: 600; }
+.highlight { color: var(--text-main); font-weight: 800; margin-left: 5px; }
+.gold-text { color: var(--gold); font-weight: 800; margin-left: 5px; }
+
+/* MODAL GAME OVER */
+.modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+    z-index: 100;
+    display: flex; justify-content: center; align-items: center;
+}
+.modal-content { max-width: 400px; padding: 2rem; border-color: var(--danger); }
+.loss-title { color: var(--danger); font-size: 2rem; margin-bottom: 10px; }
+.loss-reason { margin-bottom: 20px; color: #cbd5e1; }
+.final-score { font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; }
+.btn-restart {
+    background: var(--primary); color: white; border: none;
+    padding: 12px 30px; border-radius: 50px; font-weight: 700; cursor: pointer;
+}
+.btn-restart:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4); }
+
+.hidden { display: none !important; }
+.fade-in { animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+/* RESPONSYWNOŚĆ */
+@media (max-width: 650px) {
+    .game-board { flex-direction: column; min-height: auto; gap: 30px; padding: 15px; }
+    .vs-circle { top: 50%; left: 50%; width: 40px; height: 40px; font-size: 0.8rem; }
+    .glass-panel { padding: 1.5rem; width: 95%; }
+    .country-name { font-size: 1.1rem; min-height: auto; margin-bottom: 5px; }
+    .stat-value { font-size: 1.4rem; }
+    .flag-img { width: 50px; margin-bottom: 5px; }
+    
+    /* Na mobilce prawy panel (z przyciskami) musi mieć stałą wysokość */
+    .right-box { min-height: 200px; }
+}
