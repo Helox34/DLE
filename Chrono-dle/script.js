@@ -1,25 +1,38 @@
-/* BAZA DANYCH: CHRONO-DLE */
+/* --- BAZA DANYCH: CHRONO-DLE (POPRAWIONE ZDJĘCIA) --- */
 const itemsDB = [
-    { name: "Premiera iPhone'a", val: 2007, img: "iphone.jpg" },
-    { name: "Start YouTube", val: 2005, img: "youtube.jpg" },
-    { name: "Upadek Muru Berlińskiego", val: 1989, img: "berlin.jpg" },
-    { name: "Pierwszy lot w kosmos", val: 1961, img: "gagarin.jpg" },
-    { name: "Film 'Titanic'", val: 1997, img: "titanic.jpg" },
-    { name: "Start Google", val: 1998, img: "google.jpg" },
-    { name: "Serial 'Przyjaciele'", val: 1994, img: "friends.jpg" },
-    { name: "Wynalezienie WWW", val: 1989, img: "www.jpg" },
-    { name: "Gra Minecraft", val: 2011, img: "minecraft.jpg" },
-    { name: "Start Instagrama", val: 2010, img: "instagram.jpg" },
-    { name: "Koniec II Wojny Światowej", val: 1945, img: "ww2.jpg" },
-    { name: "Lądowanie na Księżycu", val: 1969, img: "moon.jpg" },
-    { name: "Gwiezdne Wojny (Nowa Nadzieja)", val: 1977, img: "starwars.jpg" },
-    { name: "Śmierć Michaela Jacksona", val: 2009, img: "mj.jpg" },
-    { name: "Żarówka Edisona", val: 1879, img: "bulb.jpg" },
-    { name: "Otwarcie Wieży Eiffla", val: 1889, img: "eiffel.jpg" },
-    { name: "Rozpad ZSRR", val: 1991, img: "ussr.jpg" },
-    { name: "Film 'Shrek'", val: 2001, img: "shrek.jpg" },
-    { name: "Powstanie Bitcoina", val: 2009, img: "bitcoin.jpg" },
-    { name: "Katastrofa w Czarnobylu", val: 1986, img: "chernobyl.jpg" }
+    // Technologia i Internet
+    { name: "Pierwszy iPhone", val: 2007, img: "https://upload.wikimedia.org/wikipedia/commons/0/02/IPhone_2G_PSD_Mockup.png" },
+    { name: "Start YouTube", val: 2005, img: "https://upload.wikimedia.org/wikipedia/commons/e/e1/Logo_of_YouTube_%282015-2017%29.svg" },
+    { name: "Start Facebooka", val: 2004, img: "https://upload.wikimedia.org/wikipedia/commons/c/cd/Facebook_logo_%28square%29.png" },
+    { name: "Start Google", val: 1998, img: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
+    { name: "Windows 95", val: 1995, img: "https://upload.wikimedia.org/wikipedia/commons/2/29/Windows_95_Logo.svg" },
+    { name: "PlayStation 1", val: 1994, img: "https://upload.wikimedia.org/wikipedia/commons/6/62/PlayStation-Console-wController-L.jpg" },
+    { name: "Pierwszy SMS", val: 1992, img: "https://upload.wikimedia.org/wikipedia/commons/8/82/Nokia_1011_mobile_phone.jpg" },
+    { name: "Powstanie WWW", val: 1989, img: "https://upload.wikimedia.org/wikipedia/commons/b/b2/WWW_logo_by_Robert_Cailliau.svg" },
+    { name: "Start Netflixa (DVD)", val: 1997, img: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" },
+    { name: "Powstanie Bitcoina", val: 2009, img: "https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg" },
+    { name: "Start Instagrama", val: 2010, img: "https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" },
+    { name: "Gra Minecraft", val: 2009, img: "https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png" },
+    { name: "Premiera ChatGPT", val: 2022, img: "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" },
+
+    // Historia
+    { name: "Upadek Muru Berlińskiego", val: 1989, img: "https://upload.wikimedia.org/wikipedia/commons/5/5d/BerlinWall-BrandenburgGate.jpg" },
+    { name: "Katastrofa w Czarnobylu", val: 1986, img: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Chernobyl_Reactor_4_1986.jpg" },
+    { name: "Lądowanie na Księżycu", val: 1969, img: "https://upload.wikimedia.org/wikipedia/commons/9/98/Aldrin_Apollo_11_original.jpg" },
+    { name: "Lot Gagarina w kosmos", val: 1961, img: "https://upload.wikimedia.org/wikipedia/commons/d/df/Gagarin_in_Sweden.jpg" },
+    { name: "Zamach na JFK", val: 1963, img: "https://upload.wikimedia.org/wikipedia/commons/c/c3/John_F._Kennedy%2C_White_House_color_photo_portrait.jpg" },
+    { name: "Koniec II Wojny Światowej", val: 1945, img: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Raising_the_Flag_on_Iwo_Jima%2C_larger_-_edit1.jpg" },
+    { name: "Zatonięcie Titanica", val: 1912, img: "https://upload.wikimedia.org/wikipedia/commons/f/fd/RMS_Titanic_3.jpg" },
+    { name: "Odkrycie Penicyliny", val: 1928, img: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Alexander_Fleming_1945.jpg" },
+    { name: "Woodstock", val: 1969, img: "https://upload.wikimedia.org/wikipedia/commons/3/36/Richie_Havens_at_Woodstock.jpg" },
+
+    // Kultura
+    { name: "Film Gwiezdne Wojny", val: 1977, img: "https://upload.wikimedia.org/wikipedia/commons/6/6c/Star_Wars_Logo.svg" },
+    { name: "Serial Przyjaciele", val: 1994, img: "https://upload.wikimedia.org/wikipedia/commons/b/bc/Friends_logo.svg" },
+    { name: "Film Titanic", val: 1997, img: "https://upload.wikimedia.org/wikipedia/en/1/18/Titanic_%281997_film%29_poster.png" },
+    { name: "Film Król Lew", val: 1994, img: "https://upload.wikimedia.org/wikipedia/en/3/3d/The_Lion_King_poster.jpg" },
+    { name: "Harry Potter (Film)", val: 2001, img: "https://upload.wikimedia.org/wikipedia/en/c/c0/Harry_Potter_and_the_Philosopher%27s_Stone_posters.JPG" },
+    { name: "Film Shrek", val: 2001, img: "https://upload.wikimedia.org/wikipedia/en/3/3b/Shrek_movie_poster.jpg" }
 ];
 
 const game = {
@@ -37,7 +50,7 @@ const game = {
     init() {
         this.ui.best.textContent = localStorage.getItem('chrono_highscore') || 0;
         this.state.left = this.getRandom();
-        this.state.right = this.getRandom(this.state.left);
+        this.state.right = this.getSimilar(this.state.left);
         this.render();
     },
 
@@ -47,13 +60,28 @@ const game = {
         return item;
     },
 
+    getSimilar(baseItem) {
+        // Szukamy wydarzeń +/- 20 lat
+        const min = baseItem.val - 20;
+        const max = baseItem.val + 20;
+
+        const candidates = itemsDB.filter(item => 
+            item.name !== baseItem.name && 
+            item.val >= min && 
+            item.val <= max
+        );
+
+        if (candidates.length === 0) return this.getRandom(baseItem);
+        return candidates[Math.floor(Math.random() * candidates.length)];
+    },
+
     render() {
         const { left, right } = this.state;
-        this.ui.left.img.src = `img/${left.img}`;
+        this.ui.left.img.src = left.img;
         this.ui.left.name.textContent = left.name;
         this.ui.left.val.textContent = left.val;
 
-        this.ui.right.img.src = `img/${right.img}`;
+        this.ui.right.img.src = right.img;
         this.ui.right.name.textContent = right.name;
         this.ui.right.val.textContent = "???";
         
@@ -65,7 +93,6 @@ const game = {
     guess(dir) {
         if (this.state.isAnimating) return;
         this.state.isAnimating = true;
-        // PÓŹNIEJ = Higher, WCZEŚNIEJ = Lower
         const correct = (dir === 'higher' && this.state.right.val >= this.state.left.val) ||
                         (dir === 'lower' && this.state.right.val <= this.state.left.val);
         this.reveal(correct);
@@ -74,10 +101,10 @@ const game = {
     reveal(correct) {
         this.ui.right.btns.classList.add('hidden');
         this.ui.right.res.classList.remove('hidden');
-        this.ui.right.val.textContent = this.state.right.val; // Brak animacji liczenia dla dat, lepiej od razu pokazać
+        this.ui.right.val.textContent = this.state.right.val; // Bez animacji, od razu rok
         
         if (correct) {
-            this.ui.right.val.style.color = "#3b82f6"; // Niebieski sukces
+            this.ui.right.val.style.color = "#3b82f6";
             setTimeout(() => this.next(), 1200);
         } else {
             this.ui.right.val.style.color = "#ef4444";
@@ -89,7 +116,7 @@ const game = {
         this.state.score++;
         this.ui.score.textContent = this.state.score;
         this.state.left = this.state.right;
-        this.state.right = this.getRandom(this.state.left);
+        this.state.right = this.getSimilar(this.state.left);
         this.render();
         this.state.isAnimating = false;
     },
@@ -98,9 +125,9 @@ const game = {
         const best = parseInt(localStorage.getItem('chrono_highscore') || 0);
         if (this.state.score > best) {
             localStorage.setItem('chrono_highscore', this.state.score);
-            this.ui.msg.textContent = `Nowy rekord! Poprawny rok: ${this.state.right.val}`;
+            this.ui.msg.textContent = `Nowy rekord! To był rok ${this.state.right.val}`;
         } else {
-            this.ui.msg.textContent = `Błąd! To było w roku ${this.state.right.val}`;
+            this.ui.msg.textContent = `Błąd! To rok ${this.state.right.val}`;
         }
         this.ui.final.textContent = this.state.score;
         this.ui.modal.classList.remove('hidden');
@@ -112,7 +139,7 @@ const game = {
         this.ui.best.textContent = localStorage.getItem('chrono_highscore') || 0;
         this.ui.modal.classList.add('hidden');
         this.state.left = this.getRandom();
-        this.state.right = this.getRandom(this.state.left);
+        this.state.right = this.getSimilar(this.state.left);
         this.render();
         this.state.isAnimating = false;
     }
