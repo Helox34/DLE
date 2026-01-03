@@ -1,61 +1,60 @@
 /* --- BAZA DANYCH LOGOTYPÓW --- */
-// Klucz = nazwa pliku w folderze 'logos/' (bez .png)
-// Wartość = [Nazwa Główna, aliasy...]
+// Klucz = unikalne ID
+// Wartość = { name: [Główna, aliasy], domain: 'domena do favicona' }
 const allLogos = {
     // TIER 1: Giganci (Łatwe)
-    "mcdonalds": ["McDonald's", "McDonalds", "Mac", "Mak"],
-    "apple": ["Apple"],
-    "nike": ["Nike"],
-    "google": ["Google"],
-    "facebook": ["Facebook", "FB"],
-    "youtube": ["YouTube", "YT"],
-    "amazon": ["Amazon"],
-    "cocacola": ["Coca-Cola", "Cola", "Coca Cola"],
-    "samsung": ["Samsung"],
-    "microsoft": ["Microsoft"],
+    "mcdonalds": { name: ["McDonald's", "Mac", "Mak"], domain: "mcdonalds.com" },
+    "apple": { name: ["Apple"], domain: "apple.com" },
+    "nike": { name: ["Nike"], domain: "nike.com" },
+    "google": { name: ["Google"], domain: "google.com" },
+    "facebook": { name: ["Facebook", "FB"], domain: "facebook.com" },
+    "youtube": { name: ["YouTube", "YT"], domain: "youtube.com" },
+    "amazon": { name: ["Amazon"], domain: "amazon.com" },
+    "cocacola": { name: ["Coca-Cola", "Cola"], domain: "coca-cola.com" },
+    "samsung": { name: ["Samsung"], domain: "samsung.com" },
+    "microsoft": { name: ["Microsoft"], domain: "microsoft.com" },
     
     // TIER 2: Znane (Średnie)
-    "spotify": ["Spotify"],
-    "discord": ["Discord"],
-    "pringles": ["Pringles"],
-    "twitter": ["Twitter", "X"],
-    "instagram": ["Instagram", "Insta"],
-    "pepsi": ["Pepsi"],
-    "starbucks": ["Starbucks"],
-    "netflix": ["Netflix"],
-    "lego": ["LEGO"],
-    "adidas": ["Adidas"],
-    "burgerking": ["Burger King"],
-    "playstation": ["PlayStation", "PS", "Sony"],
+    "spotify": { name: ["Spotify"], domain: "spotify.com" },
+    "discord": { name: ["Discord"], domain: "discord.com" },
+    "pringles": { name: ["Pringles"], domain: "pringles.com" },
+    "twitter": { name: ["Twitter", "X"], domain: "twitter.com" },
+    "instagram": { name: ["Instagram"], domain: "instagram.com" },
+    "pepsi": { name: ["Pepsi"], domain: "pepsi.com" },
+    "starbucks": { name: ["Starbucks"], domain: "starbucks.com" },
+    "netflix": { name: ["Netflix"], domain: "netflix.com" },
+    "lego": { name: ["LEGO"], domain: "lego.com" },
+    "adidas": { name: ["Adidas"], domain: "adidas.com" },
+    "burgerking": { name: ["Burger King"], domain: "bk.com" },
+    "playstation": { name: ["PlayStation", "PS"], domain: "playstation.com" },
     
     // TIER 3: Trudniejsze (Pro)
-    "linux": ["Linux", "Tux"],
-    "github": ["GitHub"],
-    "android": ["Android"],
-    "chrome": ["Chrome", "Google Chrome"],
-    "firefox": ["Firefox", "Mozilla"],
-    "bmw": ["BMW"],
-    "mercedes": ["Mercedes", "Mercedes-Benz"],
-    "audi": ["Audi"],
-    "tesla": ["Tesla"],
-    "volkswagen": ["Volkswagen", "VW"],
-    "adobe": ["Adobe"],
-    "nvidia": ["Nvidia"],
+    "linux": { name: ["Linux", "Tux"], domain: "linux.org" },
+    "github": { name: ["GitHub"], domain: "github.com" },
+    "android": { name: ["Android"], domain: "android.com" },
+    "chrome": { name: ["Chrome"], domain: "google.com/chrome" },
+    "firefox": { name: ["Firefox"], domain: "mozilla.org" },
+    "bmw": { name: ["BMW"], domain: "bmw.com" },
+    "mercedes": { name: ["Mercedes", "Mercedes-Benz"], domain: "mercedes-benz.com" },
+    "audi": { name: ["Audi"], domain: "audi.com" },
+    "tesla": { name: ["Tesla"], domain: "tesla.com" },
+    "volkswagen": { name: ["Volkswagen", "VW"], domain: "vw.com" },
+    "adobe": { name: ["Adobe"], domain: "adobe.com" },
+    "nvidia": { name: ["Nvidia"], domain: "nvidia.com" },
     
-    // TIER 4: Ekspert (Dodatkowo trudne lub podobne)
-    "mastercard": ["Mastercard"],
-    "visa": ["Visa"],
-    "paypal": ["PayPal"],
-    "intel": ["Intel"],
-    "amd": ["AMD"],
-    "dell": ["Dell"],
-    "hp": ["HP", "Hewlett-Packard"],
-    "ibm": ["IBM"],
-    "oracle": ["Oracle"],
-    "cisco": ["Cisco"]
+    // TIER 4: Ekspert
+    "mastercard": { name: ["Mastercard"], domain: "mastercard.com" },
+    "visa": { name: ["Visa"], domain: "visa.com" },
+    "paypal": { name: ["PayPal"], domain: "paypal.com" },
+    "intel": { name: ["Intel"], domain: "intel.com" },
+    "amd": { name: ["AMD"], domain: "amd.com" },
+    "dell": { name: ["Dell"], domain: "dell.com" },
+    "hp": { name: ["HP"], domain: "hp.com" },
+    "ibm": { name: ["IBM"], domain: "ibm.com" },
+    "oracle": { name: ["Oracle"], domain: "oracle.com" },
+    "cisco": { name: ["Cisco"], domain: "cisco.com" }
 };
 
-// Definicja Tierów na podstawie kluczy
 const tier1Codes = ["mcdonalds", "apple", "nike", "google", "facebook", "youtube", "amazon", "cocacola", "samsung", "microsoft"];
 const tier2Codes = ["spotify", "discord", "pringles", "twitter", "instagram", "pepsi", "starbucks", "netflix", "lego", "adidas", "burgerking", "playstation"];
 const tier3Codes = ["linux", "github", "android", "chrome", "firefox", "bmw", "mercedes", "audi", "tesla", "volkswagen", "adobe", "nvidia"];
@@ -63,7 +62,9 @@ const tier4Codes = ["mastercard", "visa", "paypal", "intel", "amd", "dell", "hp"
 
 function getSubset(codesArray) {
     const subset = {};
-    codesArray.forEach(code => { if (allLogos[code]) subset[code] = allLogos[code]; });
+    codesArray.forEach(code => { 
+        if (allLogos[code]) subset[code] = allLogos[code].name; 
+    });
     return subset;
 }
 
@@ -123,7 +124,6 @@ const ui = {
     updateBlur(pct, isExpert) {
         const px = (pct / 2); 
         let filter = `blur(${px}px)`;
-        // W trybie Expert: czarno-białe + zoom (fragment loga)
         if (isExpert) filter += ' grayscale(100%) scale(1.5)';
         this.elements.flag.style.filter = filter;
     },
@@ -191,8 +191,6 @@ const game = {
         this.state.recordBroken = false;
 
         const smartPool = this.getSmartPool(mode);
-        // Jeśli nie masz plików dla wszystkich, gra może się wysypać, 
-        // więc upewnij się, że masz obrazki!
         this.state.itemsList = this.shuffle(smartPool).slice(0, this.config.maxRounds);
         localStorage.setItem('logo_lastPlayed_' + mode, JSON.stringify(this.state.itemsList));
 
@@ -228,16 +226,16 @@ const game = {
         ui.elements.flag.style.opacity = '0';
         ui.updateBlur(this.state.blurPct, this.state.mode === 'expert');
 
-        // TU JEST ZMIANA: Ładujemy z lokalnego folderu 'logos'
-        const newSrc = `logos/${this.state.currentCode}.png`;
+        // UŻYWAMY GOOGLE API
+        const domain = allLogos[this.state.currentCode].domain;
+        const newSrc = `https://www.google.com/s2/favicons?domain=${domain}&sz=256`;
         ui.elements.flag.src = newSrc;
 
         ui.elements.flag.onload = () => {
             ui.elements.flag.style.opacity = '1';
         };
-        // Obsługa błędu braku obrazka
         ui.elements.flag.onerror = () => {
-            ui.elements.msg.textContent = "Błąd: Brak obrazka " + this.state.currentCode + ".png";
+            ui.elements.msg.textContent = "Błąd: Nie wczytano logo";
         };
     },
 
@@ -274,7 +272,7 @@ const game = {
             ui.elements.msg.textContent = `Brawo! To ${currentSource[this.state.currentCode][0]}`;
             ui.elements.msg.style.color = "var(--success)";
             
-            // Pokazujemy pełne logo (bez filtra, bez grayscale)
+            // Pokaż bez blura i bez grayscale
             ui.elements.flag.style.filter = "none";
             ui.animatePoints(totalPoints);
             
