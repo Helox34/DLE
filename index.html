@@ -1,553 +1,129 @@
 <!DOCTYPE html>
 <html lang="pl">
-
 <head>
-    <meta charset="utf-8">
-    <title>Flagdle</title>
-    <style>
-        body {
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: 'Segoe UI', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .screen {
-            text-align: center;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            width: 420px;
-            position: relative;
-        }
-
-        .flag {
-            width: 200px;
-            height: auto;
-            margin-bottom: 20px;
-            filter: blur(20px);
-            transition: none;
-            /* brak animacji, żeby nie migało */
-            border-radius: 8px;
-            pointer-events: none;
-            user-select: none;
-        }
-
-        input,
-        button {
-            background-color: #2a2a2a;
-            color: #e0e0e0;
-            border: 1px solid #444;
-            padding: 8px;
-            margin: 5px;
-            border-radius: 6px;
-        }
-
-        button:disabled {
-            cursor: not-allowed;
-        }
-
-
-        button {
-            cursor: pointer;
-        }
-
-        .message {
-            margin-top: 10px;
-            font-size: 14px;
-        }
-
-        .lang-switch,
-        #howToPlay {
-            position: absolute;
-            top: 10px;
-            background: #2a2a2a;
-            border: 1px solid #444;
-            padding: 5px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .lang-switch {
-            right: 10px;
-        }
-
-        #howToPlay {
-            left: 10px;
-        }
-
-        #instructions {
-            display: none;
-            background: #2a2a2a;
-            border: 1px solid #444;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 10px;
-            font-size: 13px;
-            text-align: left;
-            white-space: pre-line;
-        }
-
-        .easy {
-            background: #0f1f0f;
-            border: 2px solid #2ecc71;
-        }
-
-        .hard {
-            background: #1f1f0f;
-            border: 2px solid #f1c40f;
-        }
-
-        .pro {
-            background: #1f0f1f;
-            border: 2px solid #e100ff;
-        }
-
-        .expert {
-            background: #241717;
-            border: 2px solid #ff0000;
-        }
-
-        .pro-btn {
-            display: block;
-            margin: 10px auto;
-            width: 80%;
-            border: 2px solid #e100ff;
-        }
-
-        .hard-btn {
-            display: block;
-            margin: 10px auto;
-            width: 80%;
-            border: 2px solid #f1c40f;
-        }
-
-        .easy-btn {
-            display: block;
-            margin: 10px auto;
-            width: 80%;
-            border: 2px solid #2ecc71;
-        }
-
-        .expert-btn {
-            display: block;
-            margin: 10px auto;
-            width: 80%;
-            border: 2px solid #cc2e2e;
-        }
-
-        #suggestSelect {
-            position: absolute;
-            left: 10%;
-            transform: translateX(-50%);
-            width: 10%;
-            /* dopasowanie do inputa */
-            margin-top: -2px;
-
-            background-color: #2a2a2a;
-            color: #e0e0e0;
-
-            border: 1px solid #444;
-            border-radius: 6px;
-
-            max-height: 100px;
-            overflow-y: auto;
-
-            font-size: 14px;
-            padding: 4px 0;
-
-            display: none;
-            z-index: 999;
-        }
-
-        #suggestSelect option {
-            background-color: #2a2a2a;
-            color: #e0e0e0;
-            padding: 6px 10px;
-            border: none;
-        }
-
-        #suggestSelect option:hover,
-        #suggestSelect option:focus,
-        #suggestSelect option:checked {
-            background-color: #3a3a3a;
-            color: #ffffff;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flagdle Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <!-- Menu -->
-    <div id="menu" class="screen">
-        <button id="howToPlay" onclick="toggleInstructions()">Jak grać</button>
-        <h2 id="menuTitle">Flagdle</h2>
-        <p id="menuChoose">Wybierz poziom trudności:</p>
-        <button class="easy-btn" onclick="startGame('easy')">Łatwy</button>
-        <button class="hard-btn" onclick="startGame('hard')">Trudny</button>
-        <button class="pro-btn" onclick="startGame('pro')">Pro</button>
-        <button class="expert-btn" onclick="startGame('expert')">Expert</button>
-        <p><span id="bestStreakLabel">Najlepsza passa</span>: <span id="bestStreak">0</span></p>
-        <div id="instructions"></div>
-    </div>
 
-    <!-- Gra -->
-    <div id="game" class="screen" style="display:none;">
-        <img id="flag" class="flag" src="" alt="Flaga" draggable="false">
-        <div>
-            <input id="guess" list="countryOptions" type="text" placeholder="Podaj kraj..." autocomplete="off"/>
-            <select id="suggestSelect" size="5"
-                style="display:none; position:absolute; width:80%; left:50%; transform:translateX(-50%); z-index:999;"></select>
+    <div class="bg-animation"></div>
 
-            <button id="checkBtn" onclick="checkGuess()">Sprawdź</button>
+    <div id="menu" class="card glass-panel fade-in">
+        <div class="logo-area">
+            <h1>FLAGDLE <span class="accent">PRO</span></h1>
+            <p class="subtitle">Zgadnij flagę i bij rekordy</p>
         </div>
-        <p id="message" class="message"></p>
-        <p id="attempts" class="message"></p>
-        <p><span id="roundLabel">Runda</span>: <span id="round">1</span>/8</p>
-        <p><span id="streakLabel">Aktualna passa</span>: <span id="currentStreak">0</span></p>
-        <button id="backMenu" style="display:flex;" onclick="backToMenu()">Powrót do menu</button>
+
+        <p class="section-title">Wybierz poziom:</p>
+
+        <div class="levels-container">
+            <div class="level-row">
+                <button class="btn-level btn-easy" onclick="game.start('easy')">
+                    <span class="btn-title">ŁATWY</span>
+                    <span class="btn-desc">Znane kraje</span>
+                </button>
+                <div class="level-score">
+                    <span class="score-label">TWÓJ REKORD</span>
+                    <span class="score-value gold-glow" id="record-easy">0</span>
+                </div>
+            </div>
+
+            <div class="level-row">
+                <button class="btn-level btn-hard" onclick="game.start('hard')">
+                    <span class="btn-title">ŚREDNI</span>
+                    <span class="btn-desc">Europa + Świat</span>
+                </button>
+                <div class="level-score">
+                    <span class="score-label">TWÓJ REKORD</span>
+                    <span class="score-value gold-glow" id="record-hard">0</span>
+                </div>
+            </div>
+
+            <div class="level-row">
+                <button class="btn-level btn-pro" onclick="game.start('pro')">
+                    <span class="btn-title">TRUDNY</span>
+                    <span class="btn-desc">Dla podróżników</span>
+                </button>
+                <div class="level-score">
+                    <span class="score-label">TWÓJ REKORD</span>
+                    <span class="score-value gold-glow" id="record-pro">0</span>
+                </div>
+            </div>
+
+            <div class="level-row">
+                <button class="btn-level btn-expert" onclick="game.start('expert')">
+                    <span class="btn-title">EKSPERT</span>
+                    <span class="btn-desc">Hardcore</span>
+                </button>
+                <div class="level-score">
+                    <span class="score-label">TWÓJ REKORD</span>
+                    <span class="score-value gold-glow" id="record-expert">0</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-links">
+            <button class="btn-text" onclick="ui.toggleInstructions()">Jak działa punktacja?</button>
+        </div>
+        
+        <div id="instructions" class="hidden glass-inner">
+            <ul>
+                <li><strong>1 próba:</strong> +6 pkt + bonus za passę</li>
+                <li><strong>Każdy błąd:</strong> -1 pkt i mniejszy blur</li>
+                <li><strong>Passa:</strong> Każda kolejna dobra odpowiedź zwiększa bonus!</li>
+            </ul>
+        </div>
     </div>
 
-    <script>
-        // --- Kraje ---
-        const easyCountries = {
-            "PL": ["Polska", "Poland"], "DE": ["Niemcy", "Germany"], "FR": ["Francja", "France"],
-            "IT": ["Włochy", "Italy"], "ES": ["Hiszpania", "Spain"], "GB": ["Wielka Brytania", "UK", "United Kingdom", "Anglia", "England"],
-            "US": ["Stany Zjednoczone", "USA", "United States", "Ameryka", "America"], "CA": ["Kanada", "Canada"],
-            "BR": ["Brazylia", "Brazil"], "JP": ["Japonia", "Japan"], "CN": ["Chiny", "China"], "RU": ["Rosja", "Russia"]
-        };
-
-        const hardCountries = {
-            ...easyCountries, "PT": ["Portugalia", "Portugal"], "GR": ["Grecja", "Greece"], "NL": ["Holandia", "Netherlands"],
-            "BE": ["Belgia", "Belgium"], "CH": ["Szwajcaria", "Switzerland"], "SE": ["Szwecja", "Sweden"], "NO": ["Norwegia", "Norway"],
-            "FI": ["Finlandia", "Finland"], "CZ": ["Czechy", "Czech Republic"], "SK": ["Słowacja", "Slovakia"], "HU": ["Węgry", "Hungary"],
-            "UA": ["Ukraina", "Ukraine"], "MX": ["Meksyk", "Mexico"], "AR": ["Argentyna", "Argentina"], "CL": ["Chile", "Chile"],
-            "KR": ["Korea Południowa", "South Korea"], "IN": ["Indie", "India"], "VN": ["Wietnam", "Vietnam"], "TR": ["Turcja", "Turkey"],
-            "IL": ["Izrael", "Israel"], "EG": ["Egipt", "Egypt"], "ZA": ["RPA", "South Africa"], "AU": ["Australia", "Australia"], "NZ": ["Nowa Zelandia", "New Zealand"]
-        };
-
-        const proCountries = {
-            "BT": ["Bhutan"], "NP": ["Nepal"], "TM": ["Turkmenistan"], "PG": ["Papua Nowa Gwinea"], "DM": ["Dominika", "Dominica"],
-            "SZ": ["Eswatini"], "KG": ["Kirgistan", "Kyrgyzstan"], "CF": ["Republika Środkowoafrykańska", "Central African Republic"],
-            "VU": ["Vanuatu"], "KM": ["Komory", "Comoros"], "TL": ["Timor Wschodni", "Timor-Leste"], "MW": ["Malawi"],
-            "LY": ["Libia", "Libya"], "OM": ["Oman"], "MV": ["Malediwy", "Maldives"], "FJ": ["Fidżi", "Fiji"], "LS": ["Lesotho"],
-            "BZ": ["Belize"], "WS": ["Samoa", "Western Samoa"], "KI": ["Kiribati"], "ER": ["Erytrea", "Eritrea"], "ET": ["Etiopia", "Ethiopia"],
-            "ST": ["São Tomé i Príncipe", "Sao Tome and Principe"], "SM": ["San Marino"], "LI": ["Liechtenstein"], "MC": ["Monako", "Monaco"],
-            "NR": ["Nauru"], "TV": ["Tuvalu"], "TO": ["Tonga"], "BB": ["Barbados"], "GD": ["Grenada"], "VC": ["Saint Vincent i Grenadyny", "Saint Vincent and the Grenadines"],
-            "AG": ["Antigua i Barbuda", "Antigua and Barbuda"], "SC": ["Seszele", "Seychelles"], "PW": ["Palau"], "AD": ["Andora", "Andorra"],
-            "LC": ["Saint Lucia"], "FM": ["Mikronezja", "Federated States of Micronesia"], "SG": ["Singapur", "Singapore"], "BH": ["Bahrajn", "Bahrain"],
-            "DJ": ["Dżibuti", "Djibouti"], "MD": ["Mołdawia", "Moldova"], "GW": ["Gwinea Bissau", "Guinea-Bissau"], "GM": ["Gambia"], "AL": ["Albania"],
-            "SL": ["Sierra Leone"], "LR": ["Liberia"], "BI": ["Burundi"], "HT": ["Haiti"], "MK": ["Macedonia Północna", "North Macedonia"],
-            "AZ": ["Azerbejdżan", "Azerbaijan"], "AM": ["Armenia"], "MG": ["Madagaskar", "Madagascar"], "BS": ["Bahamy", "The Bahamas"],
-            "CV": ["Republika Zielonego Przylądka", "Cape Verde"], "GU": ["Guam"], "CY": ["Cypr", "Cyprus"], "LB": ["Liban", "Lebanon"],
-            "SR": ["Surinam", "Suriname"], "GQ": ["Gwinea Równikowa", "Equatorial Guinea"], "NE": ["Niger"], "TD": ["Czad", "Chad"],
-            "ML": ["Mali"], "BF": ["Burkina Faso"], "SO": ["Somalia"], "SS": ["Sudan Południowy", "South Sudan"], "BN": ["Brunei"]
-        };
-
-        // --- Zmienne ---
-        let countries = {}, blurLevel, secretCode, tries, mode, round;
-        const maxTries = 6, maxRounds = 8;
-        let currentStreak = 0, bestStreak = localStorage.getItem("bestStreak") || 0;
-        let gameCountries = [];
-
-        const flagElement = document.getElementById("flag");
-        const messageElement = document.getElementById("message");
-        const attemptsElement = document.getElementById("attempts");
-        const guessInput = document.getElementById("guess");
-        const checkBtn = document.getElementById("checkBtn");
-        const bestStreakEl = document.getElementById("bestStreak");
-        const currentStreakEl = document.getElementById("currentStreak");
-        const roundEl = document.getElementById("round");
-        const backMenuBtn = document.getElementById("backMenu");
-
-        bestStreakEl.textContent = bestStreak;
-
-        // --- Funkcje ---
-        function shuffle(array) {
-            let arr = array.slice();
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
-            }
-            return arr;
-        }
-
-        function startGame(selectedMode) {
-            mode = selectedMode;
-            if (mode === "pro" || mode === "expert") {
-                countries = proCountries;
-            } else {
-                countries = (mode === "easy") ? easyCountries : hardCountries;
-            }
-            updateCountryListForSuggest();
-
-            document.getElementById("menu").style.display = "none";
-            const gameDiv = document.getElementById("game");
-            gameDiv.style.display = "block";
-            gameDiv.className = "screen " + mode;
-            round = 1;
-            currentStreak = 0;
-            currentStreakEl.textContent = currentStreak;
-            bestStreakEl.textContent = bestStreak;
-
-            const codes = Object.keys(countries);
-            gameCountries = shuffle(codes).slice(0, maxRounds);
-            newRound();
-        }
-
-        function newRound() {
-            suggestSelect.style.display = "none";
-            guessInput.disabled = false;
-            checkBtn.disabled = false;
-            blurLevel = 20;
-            tries = 0;
-            secretCode = gameCountries[round - 1];
-            flagElement.src = `https://flagsapi.com/${secretCode}/flat/64.png`;
-            if (mode === "expert") {
-                flagElement.style.filter = "grayscale(100%) blur(20px)";
-            } else {
-                flagElement.style.filter = `blur(${blurLevel}px)`;
-            }
-            messageElement.textContent = "Zgadnij kraj po fladze!";
-            attemptsElement.textContent = `Próby: ${tries}/${maxTries}`;
-            guessInput.value = "";
-            guessInput.placeholder = "Podaj kraj...";
-            checkBtn.textContent = "Sprawdź";
-            roundEl.textContent = round;
-        }
-
-        function normalize(text) { return text.trim().toLowerCase(); }
-
-        function checkGuess() {
-            if (tries >= maxTries) return;
-            const guess = normalize(guessInput.value);
-            tries++;
-            attemptsElement.textContent = `Próby: ${tries}/${maxTries}`;
-            const aliases = countries[secretCode].map(normalize);
-
-            if (aliases.includes(guess)) {
-                messageElement.textContent = "Brawo! To jest " + countries[secretCode][0];
-                flagElement.style.filter = "none";
-                currentStreak++;
-                currentStreakEl.textContent = currentStreak;
-                if (currentStreak > bestStreak) {
-                    bestStreak = currentStreak;
-                    localStorage.setItem("bestStreak", bestStreak);
-                    bestStreakEl.textContent = bestStreak;
-                }
-                nextRound();
-            } else {
-                blurLevel = Math.max(0, blurLevel - 5);
-                flagElement.style.filter = (mode === "expert") ? `grayscale(100%) blur(${blurLevel}px)` : `blur(${blurLevel}px)`;
-                if (tries >= maxTries) {
-                    messageElement.textContent = "Źle! Poprawna odpowiedź: " + countries[secretCode][0];
-                    flagElement.style.filter = "none";
-                    currentStreak = 0;
-                    currentStreakEl.textContent = currentStreak;
-                    nextRound();
-                } else {
-                    // Usuń poprzedni timer jeśli jeszcze działa
-if (messageTimer) clearTimeout(messageTimer);
-
-messageElement.textContent = "Niepoprawnie, spróbuj ponownie!";
-
-// Ustaw nowy timer i zapisz go
-messageTimer = setTimeout(() => {
-    messageElement.textContent = ' ';
-    messageTimer = null; // wyczyść po zakończeniu
-}, 1500);
-                }
-            }
-        }
-
-        function nextRound() {
-            if (round < maxRounds) {
-                round++;
-                setTimeout(newRound, 1500);
-            } else {
-                backMenuBtn.disabled = false;
-                guessInput.disabled = true;
-                checkBtn.disabled = true;
-            }
-        }
-
-        function backToMenu() {
-            document.getElementById("game").style.display = "none";
-            document.getElementById("menu").style.display = "block";
-        }
-
+    <div id="game" class="card glass-panel hidden">
         
+        <div id="recordAnim" class="record-popup hidden">
+            🏆 NOWY REKORD! 🏆
+        </div>
 
-        // Treść instrukcji (na stałe, bez języków)
-        const howToText = `1. Wybierz poziom trudności.
-2. Zobacz zamazaną flagę i wpisz poprawną nazwę kraju.
-3. Jeśli się pomylisz, flaga się trochę odsłania oraz spróbuj ponownie.
+        <header class="game-hud">
+            <div class="hud-item">
+                <span class="hud-label">Runda</span>
+                <span class="hud-value"><span id="round">1</span>/8</span>
+            </div>
+            <div class="hud-item score-container">
+                <span class="hud-label">Wynik</span>
+                <span class="hud-value highlight" id="score">0</span>
+            </div>
+            <div class="hud-item streak-container">
+                <span class="hud-label">Passa</span>
+                <span class="hud-value fire-text" id="currentStreak">0</span>
+            </div>
+        </header>
 
-Łatwy - najbardziej znane kraje
-Trudny - Też znane kraje + kilka mniej znanych
-Pro - Kraje które tylko niektórzy znają 
-Expert - Czarno-białe flagi z trybu pro
-`;
+        <div class="progress-track">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
 
-        // Funkcja pokazująca / chowająca instrukcje
-        function toggleInstructions() {
-            const instructionsMenu = document.getElementById("instructions");
+        <div class="flag-wrapper">
+            <div class="points-popup" id="pointsPopup"></div>
+            <img id="flag" class="flag-img" src="" alt="Flaga" draggable="false">
+        </div>
 
-            if (instructionsMenu.style.display === "block") {
-                instructionsMenu.style.display = "none";
-            } else {
-                instructionsMenu.style.display = "block";
-                instructionsMenu.textContent = howToText;
-            }
-        }
+        <div class="interaction-area">
+            <div class="input-group">
+                <input id="guess" type="text" placeholder="Wpisz nazwę kraju..." autocomplete="off">
+                <ul id="suggestList" class="suggestions hidden"></ul>
+            </div>
+            <button id="checkBtn" class="btn-action">SPRAWDŹ</button>
+        </div>
 
+        <div class="feedback-box">
+            <p id="message" class="msg-text">Powodzenia!</p>
+            <div class="attempts-dots" id="attemptsDots"></div>
+        </div>
 
+        <button id="backMenu" class="btn-secondary hidden" onclick="game.backToMenu()">WRÓĆ DO MENU</button>
+    </div>
 
-
-const suggestSelect = document.getElementById("suggestSelect");
-
-let currentNameList = []; // lista krajów (pierwszy alias)
-let currentHighlight = -1; // indeks zaznaczonej opcji
-
-function updateCountryListForSuggest() {
-    currentNameList = Object.values(countries)
-        .map(a => a[0])
-        .filter(Boolean)
-        .sort((a, b) => a.localeCompare(b, 'pl'));
-
-    suggestSelect.innerHTML = "";
-    currentNameList.forEach(name => {
-        const opt = document.createElement("option");
-        opt.value = name;
-        opt.textContent = name;
-        suggestSelect.appendChild(opt);
-    });
-    adjustSuggestHeight();
-}
-
-function showSuggestSelect() {
-    const q = guessInput.value.trim().toLowerCase();
-    const matches = currentNameList.filter(n => n.toLowerCase().startsWith(q));
-
-    if (matches.length === 0) {
-        suggestSelect.style.display = 'none';
-        currentHighlight = -1;
-        return;
-    }
-
-    suggestSelect.innerHTML = "";
-    matches.forEach((name, index) => {
-        const opt = document.createElement('option');
-        opt.value = name;
-        opt.textContent = name;
-        if (index === currentHighlight) opt.selected = true;
-        suggestSelect.appendChild(opt);
-    });
-
-    suggestSelect.style.display = 'block';
-    adjustSuggestHeight();
-}
-
-// --- OBSŁUGA STRZAŁEK i ENTER ---
-guessInput.addEventListener('keydown', (e) => {
-    const options = Array.from(suggestSelect.options);
-    const listOpen = suggestSelect.style.display === 'block' && options.length > 0;
-
-    if (listOpen) {
-        if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            currentHighlight = (currentHighlight + 1) % options.length;
-            options[currentHighlight].selected = true;
-            return;
-        }
-
-        if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            currentHighlight = (currentHighlight - 1 + options.length) % options.length;
-            options[currentHighlight].selected = true;
-            return;
-        }
-
-        if (e.key === 'Enter') {
-            // --- FIX: jeśli coś zaznaczone, wybierz z listy ---
-            if (currentHighlight >= 0) {
-                e.preventDefault();
-                guessInput.value = options[currentHighlight].value;
-                suggestSelect.style.display = 'none';
-                currentHighlight = -1;
-                return;
-            }
-
-            // --- FIX: lista otwarta ale brak zaznaczenia → normalny checkGuess ---
-            checkGuess();
-            return;
-        }
-
-        return; // blokuje domyślną akcję dla listy
-    }
-
-    // Lista zamknięta → Enter = sprawdzanie
-    if (e.key === 'Enter') {
-        checkGuess();
-    }
-});
-
-// --- Kliknięcie myszką w listę ---
-suggestSelect.addEventListener('click', () => {
-    if (suggestSelect.value) {
-        guessInput.value = suggestSelect.value;
-        suggestSelect.style.display = 'none';
-        currentHighlight = -1;
-        guessInput.focus();
-    }
-});
-
-
-// Pokazuj podpowiedzi przy wpisywaniu i focusie
-guessInput.addEventListener('input', () => {
-    currentHighlight = -1;
-    showSuggestSelect();
-});
-
-guessInput.addEventListener('focus', () => {
-    currentHighlight = -1;
-    showSuggestSelect();
-});
-
-// Kliknięcie poza input/select chowa listę
-document.addEventListener('click', (e) => {
-    if (e.target !== suggestSelect && e.target !== guessInput) {
-        suggestSelect.style.display = 'none';
-        currentHighlight = -1;
-    }
-});
-
-// Dostosowuje wysokość selecta
-function adjustSuggestHeight() {
-    const box = suggestSelect;
-    const count = box.options.length;
-    if (count === 0) {
-        box.style.display = "none";
-        return;
-    }
-
-    const singleHeight = 30;
-    if (count === 1) {
-        box.style.maxHeight = singleHeight + "px";
-    } else if (count === 2) {
-        box.style.maxHeight = (singleHeight * 2) + "px";
-    } else {
-        box.style.maxHeight = "100px";
-    }
-}
-
-
-
-    </script>
+    <script src="script.js"></script>
 </body>
-
 </html>
