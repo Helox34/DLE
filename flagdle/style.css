@@ -1,13 +1,13 @@
 :root {
     --bg-dark: #0f1219;
-    --glass-bg: rgba(20, 25, 40, 0.9);
+    --glass-bg: rgba(20, 25, 40, 0.95);
     --glass-border: rgba(255, 255, 255, 0.08);
     --primary: #3b82f6;
     --accent: #8b5cf6;
     --success: #10b981;
     --warning: #f59e0b;
     --danger: #ef4444;
-    --gold: #FFD700; /* Złoty kolor */
+    --gold: #FFD700;
     --text-main: #ffffff;
     --text-muted: #94a3b8;
     --font: 'Montserrat', sans-serif;
@@ -19,22 +19,18 @@ body {
     background-color: var(--bg-dark);
     color: var(--text-main);
     font-family: var(--font);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    overflow: hidden;
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; overflow-x: hidden;
 }
 
 .bg-animation {
     position: absolute; width: 200%; height: 200%;
     background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15), transparent 60%);
-    animation: rotateBg 20s linear infinite;
-    z-index: -1;
+    animation: rotateBg 20s linear infinite; z-index: -1;
 }
 @keyframes rotateBg { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-/* KARTA GŁÓWNA */
+/* SZEROKI PANEL DLA PODWÓJNEGO MENU */
 .glass-panel {
     background: var(--glass-bg);
     backdrop-filter: blur(20px);
@@ -42,61 +38,71 @@ body {
     border: 1px solid var(--glass-border);
     border-radius: 30px;
     padding: 3rem;
-    width: 90%; 
-    max-width: 550px;
+    width: 95%; max-width: 550px; /* Domyślnie dla gry */
     box-shadow: 0 25px 60px rgba(0,0,0,0.6);
-    text-align: center;
-    position: relative;
+    text-align: center; position: relative;
     transition: transform 0.3s ease;
 }
 
-.logo-area { margin-bottom: 1rem; }
-h1 { font-weight: 800; letter-spacing: -1px; margin-bottom: 5px; font-size: 2.5rem; }
+/* Klasa dla szerokiego menu */
+.wide-panel {
+    max-width: 1100px; /* Szerokość na 2 kolumny */
+    padding: 2rem;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+.menu-column {
+    display: flex; flex-direction: column; height: 100%;
+}
+
+.left-col { border-right: 1px solid rgba(255,255,255,0.1); padding-right: 20px; }
+.right-col { padding-left: 20px; }
+
+/* TYPOGRAFIA */
+.logo-area { margin-bottom: 1.5rem; min-height: 80px; }
+h1 { font-weight: 800; letter-spacing: -1px; margin-bottom: 5px; font-size: 2.2rem; }
 .accent { color: var(--primary); background: linear-gradient(to right, var(--primary), var(--accent)); -webkit-background-clip: text; color: transparent; }
 .subtitle { color: var(--text-muted); font-size: 0.9rem; }
-.section-title { margin-bottom: 20px; font-size: 1rem; color: #cbd5e1; margin-top: 10px; }
 
-/* LEVELS */
-.levels-container {
-    display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;
-}
-.level-row {
-    display: flex; align-items: center; justify-content: space-between; gap: 20px;
-}
+/* PRZYCISKI I WYNIKI */
+.levels-container { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
+.level-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; }
 
 .btn-level {
-    flex: 1; border: none; padding: 15px 20px; border-radius: 16px; cursor: pointer; text-align: center;
+    flex: 1; border: none; padding: 15px; border-radius: 14px; cursor: pointer; text-align: center;
     color: white; border: 1px solid rgba(255,255,255,0.05); transition: transform 0.2s, filter 0.2s;
-    height: 80px; display: flex; flex-direction: column; justify-content: center; align-items: center;
+    height: 70px; display: flex; flex-direction: column; justify-content: center; align-items: center;
 }
 .btn-level:hover { transform: scale(1.02); filter: brightness(1.1); }
 .btn-level:active { transform: scale(0.98); }
 
+.btn-title { font-weight: 800; font-size: 1.1rem; text-transform: uppercase; margin-bottom: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+.btn-desc { font-size: 0.75rem; opacity: 0.9; font-weight: 500; }
+
+.level-score { width: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.score-label { font-size: 0.55rem; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
+.score-value { font-size: 1.8rem; font-weight: 900; color: var(--gold); text-shadow: 0 0 15px rgba(255, 215, 0, 0.4); line-height: 1; }
+
+/* KOLORY PRZYCISKÓW - PRAWA STRONA (TRUDNOŚĆ) */
 .btn-easy { background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.6)); border-color: #10b981; }
 .btn-hard { background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.6)); border-color: #f59e0b; }
 .btn-pro { background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.6)); border-color: #8b5cf6; }
 .btn-expert { background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.6)); border-color: #ef4444; }
 
-.btn-title { font-weight: 800; font-size: 1.1rem; text-transform: uppercase; margin-bottom: 2px; letter-spacing: 0.5px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-.btn-desc { font-size: 0.8rem; opacity: 0.9; font-weight: 500; }
+/* KOLORY PRZYCISKÓW - LEWA STRONA (KONTYNENTY) */
+.btn-europa { background: linear-gradient(135deg, #064e3b, #10b981); border-color: #10b981; } /* Zielony */
+.btn-azja { background: linear-gradient(135deg, #78350f, #d97706); border-color: #f59e0b; } /* Brązowo-Złoty */
+.btn-afryka { background: linear-gradient(135deg, #4c1d95, #7c3aed); border-color: #8b5cf6; } /* Fiolet */
+.btn-ameryki { background: linear-gradient(135deg, #7f1d1d, #b91c1c); border-color: #ef4444; } /* Bordowy */
+.btn-swiat { background: linear-gradient(135deg, #371818, #882d2d); border-color: #fca5a5; box-shadow: 0 0 15px rgba(220, 38, 38, 0.3); } /* Specjalny kafelek "Cały Świat" */
 
-.level-score { width: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.score-label { font-size: 0.65rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
-
-/* ZMIANA KOLORU REKORDU NA ZŁOTY */
-.score-value {
-    font-size: 2.2rem;
-    font-weight: 900;
-    color: var(--gold); /* Złoty kolor */
-    text-shadow: 0 0 15px rgba(255, 215, 0, 0.4); /* Poświata */
-    line-height: 1;
-}
-
-/* --- GRA UI --- */
-.footer-links { margin-top: 10px; }
-.btn-text { background: none; border: none; color: var(--text-muted); text-decoration: underline; cursor: pointer; font-size: 0.85rem; }
-.glass-inner { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 15px; margin-top: 15px; text-align: left; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5; }
-
+/* Pozostałe elementy UI (Gra) */
 .game-hud { display: flex; justify-content: space-between; margin-bottom: 30px; align-items: flex-end; padding: 0 10px; }
 .hud-item { display: flex; flex-direction: column; align-items: center; }
 .hud-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
@@ -134,103 +140,27 @@ input:focus { border-color: var(--primary); background: rgba(0,0,0,0.5); }
 
 .hidden { display: none !important; }
 .fade-in { animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-
-/* ANIMACJA NOWEGO REKORDU */
-.record-popup {
-    position: absolute;
-    top: 35%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    text-align: center;
-    font-size: 2.5rem;
-    font-weight: 900;
-    font-style: italic;
-    background: linear-gradient(to right, #FFD700, #FDB931, #FFD700);
-    -webkit-background-clip: text;
-    color: transparent;
-    text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
-    z-index: 50;
-    pointer-events: none;
-    opacity: 0;
-}
-
+.record-popup { position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%); width: 100%; text-align: center; font-size: 2.5rem; font-weight: 900; font-style: italic; background: linear-gradient(to right, #FFD700, #FDB931, #FFD700); -webkit-background-clip: text; color: transparent; text-shadow: 0 0 30px rgba(255, 215, 0, 0.3); z-index: 50; pointer-events: none; opacity: 0; }
 .anim-record { animation: recordBreak 2.5s ease forwards; }
 
-@keyframes recordBreak {
-    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
-    15% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
-    25% { transform: translate(-50%, -50%) scale(1); }
-    80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    100% { opacity: 0; transform: translate(-50%, -100%) scale(1.5); }
-}
-
 @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes popupAnim { 
-    0% { opacity: 0; transform: translate(-50%, -20%) scale(0.5); } 
-    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); } 
-    100% { opacity: 0; transform: translate(-50%, -100%) scale(1); } 
-}
+@keyframes recordBreak { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); } 15% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); } 25% { transform: translate(-50%, -50%) scale(1); } 80% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0; transform: translate(-50%, -100%) scale(1.5); } }
+@keyframes popupAnim { 0% { opacity: 0; transform: translate(-50%, -20%) scale(0.5); } 50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); } 100% { opacity: 0; transform: translate(-50%, -100%) scale(1); } }
 .anim-popup { animation: popupAnim 1s ease forwards; }
 .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
 @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
 
-@media (max-width: 500px) {
-    .level-row { flex-direction: column; gap: 5px; margin-bottom: 15px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 12px; }
-    .btn-level { width: 100%; height: 60px; }
-    .level-score { width: 100%; flex-direction: row; justify-content: center; gap: 10px; }
-    .score-value { font-size: 1.5rem; }
-    .glass-panel { padding: 1.5rem; }
-    h1 { font-size: 2rem; }
-}
-/* --- PRZYCISK POWROTU (HOME) --- */
-.btn-home {
-    position: fixed; /* Przyklejony do ekranu */
-    top: 25px;
-    left: 25px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 12px 20px;
-    border-radius: 30px;
-    color: white;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    z-index: 1000; /* Zawsze na wierzchu */
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
+/* Przycisk HOME */
+.btn-home { position: fixed; top: 25px; left: 25px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px 20px; border-radius: 30px; color: white; text-decoration: none; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 10px; z-index: 1000; backdrop-filter: blur(10px); transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+.btn-home:hover { background: rgba(255, 255, 255, 0.25); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
 
-.btn-home:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-}
-
-.btn-home i {
-    font-size: 1rem;
-}
-
-/* Responsywność - na telefonach tylko ikona */
-@media (max-width: 600px) {
-    .btn-home {
-        top: 15px;
-        left: 15px;
-        padding: 12px; /* Kwadratowy przycisk */
-        border-radius: 50%;
-        width: 45px;
-        height: 45px;
-        justify-content: center;
-    }
-    
-    .btn-home span {
-        display: none; /* Ukryj napis "MENU" na małym ekranie */
-    }
-    
-    .btn-home i {
-        font-size: 1.1rem;
-    }
+/* Responsywność dla małych ekranów (Mobilki) */
+@media (max-width: 900px) {
+    .menu-grid { grid-template-columns: 1fr; gap: 30px; }
+    .wide-panel { padding: 1.5rem; max-width: 95%; margin-top: 60px; } /* Odstęp od przycisku menu */
+    .left-col { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); padding-right: 0; padding-bottom: 20px; }
+    .right-col { padding-left: 0; padding-top: 20px; }
+    .btn-level { height: 60px; }
+    .btn-home { top: 15px; left: 15px; width: 45px; height: 45px; padding: 0; justify-content: center; }
+    .btn-home span { display: none; }
 }

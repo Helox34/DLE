@@ -38,7 +38,14 @@ const allCountries = {
     "ZW": ["Zimbabwe"], "AE": ["Zjednoczone Emiraty Arabskie"]
 };
 
-// Definicja Tierów (Poziomów)
+// PODZIAŁ NA KONTYNENTY (Ręcznie wyselekcjonowane kody)
+const europeCodes = ["AL","AD","AT","BY","BE","BA","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR","HU","IS","IE","IT","LV","LI","LT","LU","MT","MD","MC","ME","NL","MK","NO","PL","PT","RO","RU","SM","RS","SK","SI","ES","SE","CH","UA","GB","VA"];
+const asiaCodes = ["AF","AM","AZ","BH","BD","BT","BN","KH","CN","GE","IN","ID","IR","IQ","IL","JP","JO","KZ","KW","KG","LA","LB","MY","MV","MN","MM","NP","KP","KR","OM","PK","PH","QA","SA","SG","LK","SY","TJ","TH","TL","TR","TM","AE","UZ","VN","YE"];
+const africaCodes = ["DZ","AO","BJ","BW","BF","BI","CM","CV","CF","TD","KM","CG","CD","DJ","EG","GQ","ER","SZ","ET","GA","GM","GH","GN","GW","CI","KE","LS","LR","LY","MG","MW","ML","MR","MU","MA","MZ","NA","NE","NG","RW","ST","SN","SC","SL","SO","ZA","SS","SD","TZ","TG","TN","UG","ZM","ZW"];
+const americasCodes = ["AG","AR","BS","BB","BZ","BO","BR","CA","CL","CO","CR","CU","DM","DO","EC","SV","GD","GT","GY","HT","HN","JM","MX","NI","PA","PY","PE","KN","LC","VC","SR","TT","US","UY","VE"];
+const oceaniaCodes = ["AU","FJ","KI","MH","FM","NR","NZ","PW","PG","WS","SB","TO","TV","VU"];
+
+// Definicja Tierów (Trudność)
 const tier1Codes = ["PL", "DE", "FR", "IT", "ES", "GB", "US", "JP", "CN", "RU", "BR", "CA", "AU", "IN", "GR", "TR", "EG", "UA", "CH", "SE"];
 const tier2Codes = ["MX", "AR", "NL", "BE", "PT", "NO", "FI", "CZ", "KR", "ZA", "SA", "IR", "ID", "TH", "VN", "RO", "HU", "DK", "AT", "IE", "NZ", "CL", "CO", "PE", "VE", "MA", "DZ", "NG", "KE", "PK", "BD", "PH", "MY", "IS", "HR", "RS", "BG", "SK"];
 const tier3Codes = ["KZ", "UZ", "TM", "KG", "TJ", "MN", "NP", "BT", "LA", "KH", "MM", "LK", "SY", "JO", "LB", "KW", "QA", "AE", "OM", "YE", "LY", "TN", "SD", "SS", "ET", "SO", "UG", "RW", "TZ", "ZM", "ZW", "MZ", "AO", "NA", "BW", "CM", "SN", "GH", "CI", "BF", "ML", "NE", "TD", "CU", "JM", "HT", "DO", "GT", "HN", "SV", "NI", "CR", "PA", "BO", "PY", "UY", "GE", "AM", "AZ", "MD", "BY", "EE", "LV", "LT", "AL", "MK", "BA", "ME"];
@@ -52,10 +59,18 @@ function getSubset(codesArray) {
 }
 
 const countriesData = {
+    // Trudność
     easy: getSubset(tier1Codes),
     hard: getSubset([...tier1Codes, ...tier2Codes]),
     pro: getSubset([...tier2Codes, ...tier3Codes]),
-    expert: getSubset([...tier3Codes, ...tier4Codes])
+    expert: getSubset([...tier3Codes, ...tier4Codes]),
+    
+    // Kontynenty
+    europa: getSubset(europeCodes),
+    azja: getSubset(asiaCodes),
+    afryka: getSubset(africaCodes),
+    ameryki: getSubset([...americasCodes, ...oceaniaCodes]), // Łączymy Ameryki i Oceanię jako "Reszta Świata"
+    swiat: getSubset(Object.keys(allCountries)) // Wszystkie
 };
 
 /* --- UI --- */
@@ -82,7 +97,7 @@ const ui = {
     init() { this.updateMenuScores(); },
 
     updateMenuScores() {
-        const modes = ['easy', 'hard', 'pro', 'expert'];
+        const modes = ['easy', 'hard', 'pro', 'expert', 'europa', 'azja', 'afryka', 'ameryki', 'swiat'];
         modes.forEach(mode => {
             const el = document.getElementById(`record-${mode}`);
             if (el) {
@@ -128,18 +143,13 @@ const ui = {
         el.classList.add('anim-popup');
     },
     
-    // NOWA FUNKCJA: Animacja rekordu
     showRecordAnimation() {
         const el = this.elements.recordAnim;
         el.classList.remove('hidden');
         el.classList.remove('anim-record');
-        void el.offsetWidth; // reset animacji
+        void el.offsetWidth;
         el.classList.add('anim-record');
-        
-        // Ukryj po zakończeniu animacji
-        setTimeout(() => {
-            el.classList.add('hidden');
-        }, 3000);
+        setTimeout(() => { el.classList.add('hidden'); }, 3000);
     },
 
     shakeInput() {
@@ -153,7 +163,7 @@ const game = {
     config: { maxTries: 6, maxRounds: 8 },
     state: { 
         mode: null, round: 1, tries: 0, streak: 0, score: 0, 
-        currentCode: null, blurPct: 80, countriesList: [], recordBroken: false 
+        currentCode: null, blurPct: 40, countriesList: [], recordBroken: false 
     },
     countryNames: [],
 
@@ -176,7 +186,7 @@ const game = {
         this.state.streak = 0;
         this.state.score = 0;
         this.state.round = 1;
-        this.state.recordBroken = false; // Reset flagi rekordu
+        this.state.recordBroken = false;
 
         const smartPool = this.getSmartPool(mode);
         this.state.countriesList = this.shuffle(smartPool).slice(0, this.config.maxRounds);
@@ -196,7 +206,7 @@ const game = {
 
         this.state.currentCode = this.state.countriesList[this.state.round - 1];
         this.state.tries = 0;
-        this.state.blurPct = 80;
+        this.state.blurPct = 40;
 
         ui.elements.input.value = '';
         ui.elements.input.disabled = false;
@@ -217,9 +227,7 @@ const game = {
         const newSrc = `https://flagsapi.com/${this.state.currentCode}/flat/64.png`;
         ui.elements.flag.src = newSrc;
 
-        ui.elements.flag.onload = () => {
-            ui.elements.flag.style.opacity = '1';
-        };
+        ui.elements.flag.onload = () => { ui.elements.flag.style.opacity = '1'; };
     },
 
     checkGuess() {
@@ -231,7 +239,6 @@ const game = {
         ui.setDots(this.config.maxTries, this.state.tries);
 
         if (correctNames.includes(userGuess)) {
-            // SUKCES
             const basePoints = (this.config.maxTries - this.state.tries) + 1;
             const totalPoints = basePoints + this.state.streak;
 
@@ -241,16 +248,13 @@ const game = {
             ui.elements.score.textContent = this.state.score;
             ui.elements.streak.textContent = this.state.streak;
             
-            // --- SPRAWDZANIE REKORDU W TRAKCIE GRY ---
             const recordKey = `bestScore_${this.state.mode}`;
             const currentBest = parseInt(localStorage.getItem(recordKey) || 0);
 
-            // Jeśli pobiliśmy rekord i nie zrobiliśmy tego już w tej grze
             if (this.state.score > currentBest && !this.state.recordBroken && currentBest > 0) {
                 this.state.recordBroken = true;
-                ui.showRecordAnimation(); // ODPAL ANIMACJĘ
+                ui.showRecordAnimation();
             }
-            // Zapisujemy nowy rekord od razu
             if (this.state.score > currentBest) {
                 localStorage.setItem(recordKey, this.state.score);
             }
@@ -266,7 +270,6 @@ const game = {
 
             this.nextRoundDelay();
         } else {
-            // BŁĄD
             if (this.state.tries >= this.config.maxTries) {
                 ui.elements.msg.textContent = `Porażka! To: ${currentSource[this.state.currentCode][0]}`;
                 ui.elements.msg.style.color = "var(--danger)";
@@ -278,7 +281,7 @@ const game = {
                 ui.elements.msg.textContent = "Źle! Blur maleje...";
                 ui.elements.msg.style.color = "var(--warning)";
                 ui.shakeInput();
-                this.state.blurPct = Math.max(0, this.state.blurPct - 10);
+                this.state.blurPct = Math.max(0, this.state.blurPct - 8);
                 ui.updateBlur(this.state.blurPct, this.state.mode === 'expert');
             }
         }
