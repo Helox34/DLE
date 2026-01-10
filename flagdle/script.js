@@ -38,12 +38,14 @@ const allCountries = {
     "ZW": ["Zimbabwe"], "AE": ["Zjednoczone Emiraty Arabskie"]
 };
 
+// PODZIAŁ NA KONTYNENTY
 const europeCodes = ["AL","AD","AT","BY","BE","BA","BG","HR","CY","CZ","DK","EE","FI","FR","DE","GR","HU","IS","IE","IT","LV","LI","LT","LU","MT","MD","MC","ME","NL","MK","NO","PL","PT","RO","RU","SM","RS","SK","SI","ES","SE","CH","UA","GB","VA"];
 const asiaCodes = ["AF","AM","AZ","BH","BD","BT","BN","KH","CN","GE","IN","ID","IR","IQ","IL","JP","JO","KZ","KW","KG","LA","LB","MY","MV","MN","MM","NP","KP","KR","OM","PK","PH","QA","SA","SG","LK","SY","TJ","TH","TL","TR","TM","AE","UZ","VN","YE"];
 const africaCodes = ["DZ","AO","BJ","BW","BF","BI","CM","CV","CF","TD","KM","CG","CD","DJ","EG","GQ","ER","SZ","ET","GA","GM","GH","GN","GW","CI","KE","LS","LR","LY","MG","MW","ML","MR","MU","MA","MZ","NA","NE","NG","RW","ST","SN","SC","SL","SO","ZA","SS","SD","TZ","TG","TN","UG","ZM","ZW"];
 const americasCodes = ["AG","AR","BS","BB","BZ","BO","BR","CA","CL","CO","CR","CU","DM","DO","EC","SV","GD","GT","GY","HT","HN","JM","MX","NI","PA","PY","PE","KN","LC","VC","SR","TT","US","UY","VE"];
 const oceaniaCodes = ["AU","FJ","KI","MH","FM","NR","NZ","PW","PG","WS","SB","TO","TV","VU"];
 
+// Definicja Tierów (Trudność)
 const tier1Codes = ["PL", "DE", "FR", "IT", "ES", "GB", "US", "JP", "CN", "RU", "BR", "CA", "AU", "IN", "GR", "TR", "EG", "UA", "CH", "SE"];
 const tier2Codes = ["MX", "AR", "NL", "BE", "PT", "NO", "FI", "CZ", "KR", "ZA", "SA", "IR", "ID", "TH", "VN", "RO", "HU", "DK", "AT", "IE", "NZ", "CL", "CO", "PE", "VE", "MA", "DZ", "NG", "KE", "PK", "BD", "PH", "MY", "IS", "HR", "RS", "BG", "SK"];
 const tier3Codes = ["KZ", "UZ", "TM", "KG", "TJ", "MN", "NP", "BT", "LA", "KH", "MM", "LK", "SY", "JO", "LB", "KW", "QA", "AE", "OM", "YE", "LY", "TN", "SD", "SS", "ET", "SO", "UG", "RW", "TZ", "ZM", "ZW", "MZ", "AO", "NA", "BW", "CM", "SN", "GH", "CI", "BF", "ML", "NE", "TD", "CU", "JM", "HT", "DO", "GT", "HN", "SV", "NI", "CR", "PA", "BO", "PY", "UY", "GE", "AM", "AZ", "MD", "BY", "EE", "LV", "LT", "AL", "MK", "BA", "ME"];
@@ -57,21 +59,24 @@ function getSubset(codesArray) {
 }
 
 const countriesData = {
+    // Trudność (Wersja PRO)
     easy: getSubset(tier1Codes),
     hard: getSubset([...tier1Codes, ...tier2Codes]),
     pro: getSubset([...tier2Codes, ...tier3Codes]),
     expert: getSubset([...tier3Codes, ...tier4Codes]),
+    
+    // Kontynenty (Wersja Normalna)
     europa: getSubset(europeCodes),
     azja: getSubset(asiaCodes),
     afryka: getSubset(africaCodes),
-    ameryki: getSubset([...americasCodes, ...oceaniaCodes]),
+    ameryki: getSubset([...americasCodes, ...oceaniaCodes]), 
     swiat: getSubset(Object.keys(allCountries))
 };
 
 /* --- UI --- */
 const ui = {
     elements: {
-        screens: { menu: document.getElementById('menu'), game: document.getElementById('game') },
+        screens: { menu: document.getElementById('main-menu-view'), game: document.getElementById('game') },
         flag: document.getElementById('flag'),
         input: document.getElementById('guess'),
         msg: document.getElementById('message'),
@@ -86,8 +91,6 @@ const ui = {
         pointsPopup: document.getElementById('pointsPopup'),
         recordAnim: document.getElementById('recordAnim')
     },
-
-    toggleInstructions() { document.getElementById('instructions').classList.toggle('hidden'); },
 
     init() { this.updateMenuScores(); },
 
@@ -115,8 +118,10 @@ const ui = {
     },
 
     updateBlur(pct, isGray) {
-        // ZMIANA: W tej wersji gry wyłączamy nakładanie filtrów
-        this.elements.flag.style.filter = 'none';
+        const px = (pct / 2); 
+        let filter = `blur(${px}px)`;
+        if (isGray) filter += ' grayscale(100%)';
+        this.elements.flag.style.filter = filter;
     },
 
     setDots(total, used) {
@@ -153,10 +158,10 @@ const ui = {
 
 /* --- GAME LOGIC --- */
 const game = {
-    config: { maxTries: 6, maxRounds: 8 },
+    config: { maxTries: 6, maxRounds: 10 }, // Ustawiono 10 rund
     state: { 
         mode: null, round: 1, tries: 0, streak: 0, score: 0, 
-        currentCode: null, blurPct: 0, countriesList: [], recordBroken: false 
+        currentCode: null, blurPct: 40, countriesList: [], recordBroken: false 
     },
     countryNames: [],
 
@@ -181,6 +186,17 @@ const game = {
         this.state.round = 1;
         this.state.recordBroken = false;
 
+        // --- ZMIANA TEKSTU PRZYCISKU POWROTU ---
+        const backBtn = document.getElementById('backMenu');
+        const proModes = ['easy', 'hard', 'pro', 'expert'];
+        
+        if (proModes.includes(mode)) {
+            backBtn.textContent = "ZMIEŃ POZIOM TRUDNOŚCI";
+        } else {
+            backBtn.textContent = "ZMIEŃ REGION";
+        }
+        // ----------------------------------------
+
         const smartPool = this.getSmartPool(mode);
         this.state.countriesList = this.shuffle(smartPool).slice(0, this.config.maxRounds);
         localStorage.setItem('lastPlayed_' + mode, JSON.stringify(this.state.countriesList));
@@ -199,12 +215,22 @@ const game = {
 
         this.state.currentCode = this.state.countriesList[this.state.round - 1];
         this.state.tries = 0;
-        this.state.blurPct = 0; // ZMIANA: Brak blura od początku
+        
+        // --- LOGIKA BLURA ---
+        const proModes = ['easy', 'hard', 'pro', 'expert'];
+        if (proModes.includes(this.state.mode)) {
+            this.state.blurPct = 40; // Blur dla PRO
+        } else {
+            this.state.blurPct = 0; // Brak blura dla zwykłych
+        }
 
         ui.elements.input.value = '';
         ui.elements.input.disabled = false;
         ui.elements.checkBtn.disabled = false;
-        ui.elements.backBtn.classList.add('hidden');
+        
+        // --- PRZYCISK POWROTU ZAWSZE WIDOCZNY ---
+        ui.elements.backBtn.classList.remove('hidden');
+
         ui.elements.round.textContent = this.state.round;
         ui.elements.msg.textContent = "Zgadnij kraj!";
         ui.elements.msg.style.color = "var(--text-muted)";
@@ -215,7 +241,7 @@ const game = {
         ui.elements.progressBar.style.width = `${progressPct}%`;
 
         ui.elements.flag.style.opacity = '0';
-        ui.updateBlur(0, false); // ZMIANA: Zawsze 0 blura
+        ui.updateBlur(this.state.blurPct, this.state.mode === 'expert');
 
         const newSrc = `https://flagsapi.com/${this.state.currentCode}/flat/64.png`;
         ui.elements.flag.src = newSrc;
@@ -232,6 +258,7 @@ const game = {
         ui.setDots(this.config.maxTries, this.state.tries);
 
         if (correctNames.includes(userGuess)) {
+            // SUKCES
             const basePoints = (this.config.maxTries - this.state.tries) + 1;
             const totalPoints = basePoints + this.state.streak;
 
@@ -263,6 +290,7 @@ const game = {
 
             this.nextRoundDelay();
         } else {
+            // BŁĄD
             if (this.state.tries >= this.config.maxTries) {
                 ui.elements.msg.textContent = `Porażka! To: ${currentSource[this.state.currentCode][0]}`;
                 ui.elements.msg.style.color = "var(--danger)";
@@ -271,10 +299,18 @@ const game = {
                 ui.elements.streak.textContent = 0;
                 this.nextRoundDelay();
             } else {
-                ui.elements.msg.textContent = "Źle! Spróbuj ponownie.";
-                ui.elements.msg.style.color = "var(--warning)";
                 ui.shakeInput();
-                // Brak zmiany blura tutaj
+                
+                // Zmniejszamy blur TYLKO jeśli był aktywny (tryb PRO)
+                if (this.state.blurPct > 0) {
+                    this.state.blurPct = Math.max(0, this.state.blurPct - 8);
+                    ui.elements.msg.textContent = "Źle! Obrazek się wyostrza...";
+                } else {
+                    ui.elements.msg.textContent = "Źle! Spróbuj jeszcze raz...";
+                }
+                ui.elements.msg.style.color = "var(--warning)";
+                
+                ui.updateBlur(this.state.blurPct, this.state.mode === 'expert');
             }
         }
     },
@@ -292,7 +328,7 @@ const game = {
         ui.elements.progressBar.style.width = '100%';
         ui.elements.msg.textContent = `Koniec! Twój wynik: ${this.state.score}`;
         ui.elements.msg.style.color = "var(--text-main)";
-        ui.elements.backBtn.classList.remove('hidden');
+        // Przycisk powrotu jest już widoczny, więc nic nie trzeba robić
     },
 
     backToMenu() { ui.showMenu(); },

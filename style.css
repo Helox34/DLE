@@ -132,8 +132,33 @@ body {
 }
 
 /* Responsywność */
+/* Responsywność */
+@media (max-width: 1024px) {
+    .main-container { padding: 30px 15px; }
+    .main-title { font-size: 3rem; }
+    .hub-header { margin-bottom: 40px; }
+}
+
 @media (max-width: 600px) {
-    .main-title { font-size: 2.5rem; }
-    .games-grid { grid-template-columns: 1fr; }
-    .game-card { padding: 20px; }
+    .main-title { font-size: 2.2rem; }
+    .subtitle { font-size: 1rem; }
+    .hub-header { margin-bottom: 30px; }
+    
+    .games-grid { grid-template-columns: 1fr; gap: 15px; }
+    
+    .game-card { 
+        padding: 20px; 
+        border-radius: 20px;
+    }
+    
+    .card-icon {
+        width: 50px; height: 50px;
+        font-size: 1.5rem;
+        border-radius: 12px;
+    }
+    
+    .card-content h2 { font-size: 1.3rem; }
+    .card-content p { font-size: 0.85rem; }
+    
+    .card-arrow { font-size: 1rem; }
 }

@@ -3,21 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chrono-dle - Co było wcześniej?</title>
+    <title>Chrono-dle: Historia Polski</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+
     <a href="../index.html" class="btn-home">
         <i class="fa-solid fa-house"></i> <span>MENU</span>
     </a>
+
     <div class="bg-animation"></div>
 
-    <div class="card glass-panel fade-in">
+    <div id="menu" class="card glass-panel fade-in">
         <header class="header-area">
             <h1>CHRONO<span class="accent">DLE</span></h1>
-            <p class="subtitle">Co wydarzyło się wcześniej?</p>
+            <p class="subtitle">Historia Polski</p>
+            <p class="subtitle-small">Wybierz epokę:</p>
+        </header>
+
+        <div class="levels-grid">
+            <button class="btn-level lvl-1" onclick="game.start('modern')">
+                <div class="lvl-content-wrapper">
+                    <div class="lvl-icon"><i class="fa-solid fa-building"></i></div>
+                    <div class="lvl-info">
+                        <span class="lvl-date">1900 – Dziś</span>
+                        <span class="lvl-name">Współczesność</span>
+                    </div>
+                </div>
+                <div class="lvl-record-box">
+                    <span class="rec-label">REKORD</span>
+                    <span class="rec-val" id="record-modern">0</span>
+                </div>
+            </button>
+
+            <button class="btn-level lvl-2" onclick="game.start('empires')">
+                <div class="lvl-content-wrapper">
+                    <div class="lvl-icon"><i class="fa-solid fa-industry"></i></div>
+                    <div class="lvl-info">
+                        <span class="lvl-date">1700 – 1899</span>
+                        <span class="lvl-name">Zabory i Powstania</span>
+                    </div>
+                </div>
+                <div class="lvl-record-box">
+                    <span class="rec-label">REKORD</span>
+                    <span class="rec-val" id="record-empires">0</span>
+                </div>
+            </button>
+
+            <button class="btn-level lvl-3" onclick="game.start('renaissance')">
+                <div class="lvl-content-wrapper">
+                    <div class="lvl-icon"><i class="fa-solid fa-crown"></i></div>
+                    <div class="lvl-info">
+                        <span class="lvl-date">1200 – 1699</span>
+                        <span class="lvl-name">Rzeczpospolita</span>
+                    </div>
+                </div>
+                <div class="lvl-record-box">
+                    <span class="rec-label">REKORD</span>
+                    <span class="rec-val" id="record-renaissance">0</span>
+                </div>
+            </button>
+
+            <button class="btn-level lvl-4" onclick="game.start('ancient')">
+                <div class="lvl-content-wrapper">
+                    <div class="lvl-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div class="lvl-info">
+                        <span class="lvl-date">Do 1199</span>
+                        <span class="lvl-name">Piastowie</span>
+                    </div>
+                </div>
+                <div class="lvl-record-box">
+                    <span class="rec-label">REKORD</span>
+                    <span class="rec-val" id="record-ancient">0</span>
+                </div>
+            </button>
+
+            <button class="btn-level lvl-5 full-width" onclick="game.start('mix')">
+                <div class="lvl-content-wrapper">
+                    <div class="lvl-icon"><i class="fa-solid fa-timeline"></i></div>
+                    <div class="lvl-info">
+                        <span class="lvl-date">966 – 2025</span>
+                        <span class="lvl-name">PEŁNA HISTORIA (MIX)</span>
+                    </div>
+                </div>
+                <div class="lvl-record-box">
+                    <span class="rec-label">REKORD</span>
+                    <span class="rec-val" id="record-mix">0</span>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <div id="game" class="card glass-panel hidden">
+        <header class="header-area compact-header">
+            <h2>CHRONO<span class="accent">DLE</span></h2>
         </header>
 
         <div class="game-board">
@@ -25,10 +106,10 @@
                 <div class="img-container">
                     <img id="img-left" class="item-img" src="" alt="Wydarzenie">
                 </div>
-                <h2 id="name-left" class="item-name">iPhone (1 gen.)</h2>
+                <h2 id="name-left" class="item-name">Wydarzenie A</h2>
                 <div class="stat-container">
                     <span class="stat-label">Rok</span>
-                    <span id="val-left" class="stat-value">2007</span>
+                    <span id="val-left" class="stat-value">2000</span>
                 </div>
             </div>
 
@@ -38,7 +119,7 @@
                 <div class="img-container">
                     <img id="img-right" class="item-img" src="" alt="Wydarzenie">
                 </div>
-                <h2 id="name-right" class="item-name">Start YouTube</h2>
+                <h2 id="name-right" class="item-name">Wydarzenie B</h2>
                 
                 <div class="stat-container interaction-zone">
                     <div id="buttons-area" class="buttons-block">
@@ -61,10 +142,12 @@
             </div>
         </div>
 
-        <div class="footer-stats">
+        <div class="footer-stats"></div>
             <div class="stat-pill">Passa: <span id="current-score" class="highlight">0</span></div>
             <div class="stat-pill">Rekord: <span id="best-score" class="gold-text">0</span></div>
         </div>
+        
+        <button class="btn-text" onclick="game.backToMenu()" style="margin-top: 20px;">ZMIEŃ EPOKĘ</button>
     </div>
 
     <div id="game-over" class="modal hidden">
@@ -72,6 +155,7 @@
             <h1 class="loss-title">KONIEC GRY!</h1>
             <p class="loss-reason" id="loss-msg">Błąd.</p>
             <div class="final-score">Twój wynik: <span id="final-score-val">0</span></div>
+            <br>
             <button class="btn-restart" onclick="game.restart()">ZAGRAJ PONOWNIE</button>
         </div>
     </div>
